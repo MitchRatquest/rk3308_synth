@@ -1,6 +1,7 @@
 config BR2_PACKAGE_FLEXT
-	bool "puredata-flext"
+	bool "flext"
 	depends on BR2_INSTALL_LIBSTDCPP
+	depends on BR2_PACKAGE_PUREDATA
 
 	help
 	  helper lib for puredata externals
