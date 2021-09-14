@@ -1,0 +1,23 @@
+--- a/pd-lib-builder/Makefile.pdlibbuilder	2021-09-14 17:40:36.039827349 -0500
++++ b/pd-lib-builder/Makefile.pdlibbuilder	2021-09-14 17:43:47.732362170 -0500
+@@ -473,7 +473,7 @@
+ 
+ 
+ # native architecture of the build machine
+-build.arch := $(shell uname -m)
++build.arch := aarch64
+ 
+ # Target architecture as reported by compiler. Give precedence to eventual
+ # user-defined compiler. The first field of <cpu>-<vendor>-<os> is extracted.
+@@ -511,6 +511,10 @@
+ else ifeq ($(target.arch), armv7l)
+   arch.c.flags = -march=armv7-a -mfpu=vfpv3 -mfloat-abi=hard
+ 
++# Beagle, Udoo, RPi2 etc.
++else ifeq ($(target.arch), aarch64)
++  arch.c.flags = -march=armv8-a -mtune=cortex-a35
++
+ # Intel 32 bit, build with SSE and SSE2 instructions
+ else ifeq ($(findstring $(target.arch), i386 i686), $(target.arch))
+   arch.c.flags = -march=pentium4 -mfpmath=sse -msse -msse2
+

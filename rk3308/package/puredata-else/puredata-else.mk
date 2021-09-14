@@ -21,10 +21,10 @@ endef
 
 define PUREDATA_ELSE_INSTALL_TARGET_CMDS
 	$(INSTALL) -d $(TARGET_DIR)/usr/local/lib/pd-externals/else
-	find $(@D) -type f -name "*.pd" -print | xargs -I{} $(INSTALL) -m 0755 \
+	find $(@D) -type f -name "*.pd" -print -0 | xargs -I{} $(INSTALL) -m 0755 \
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/else/
-	find $(@D) -type f -name "*.pd_linux" -print | xargs -I{} $(INSTALL) -m 0755 \
-		{} $(TARGET_DIR)/usr/local/lib/pd-externals/else/
+	find $(@D) -type f -name "*.pd_linux" -print -0 | xargs -I{} $(INSTALL) -m 0755 \
+		 {} $(TARGET_DIR)/usr/local/lib/pd-externals/else/
 	#$(MAKE) install DESTDIR="$(TARGET_DIR)" -C $(@D)
 endef
 

@@ -14,13 +14,24 @@ PUREDATA_BOIDS_DEPENDENCIES = puredata
 define PUREDATA_BOIDS_BUILD_CMDS
 	$(MAKE) CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
 		PDINCLUDEDIR="$(STAGING_DIR)/usr/include/pd" \
+		PD_INCLUDE="$(STAGING_DIR)/usr/include/pd" \
 		PDDIR="$(STAGING_DIR)/usr/lib/pd" \
 		PDBINDIR="$(STAGING_DIR)/usr/lib/pd/bin" \
 		-C $(@D)
 endef
-
+# DONT DO THE STRIPPING, REMOVE PD_INCLUDE IN MAKEFILE
 define PUREDATA_BOIDS_INSTALL_TARGET_CMDS
-	$(MAKE) install DESTDIR="$(TARGET_DIR)" -C $(@D)
+	echo $(NAME)
+	echo $(_NAME)
+	echo $(@D)
+	echo $(@NAME)
+	basename $(@D)
+	$(INSTALL) -d $(TARGET_DIR)/usr/local/lib/pd-externals/boids
+	find $(@D) -type f -name "*.pd" -print | xargs -I{} $(INSTALL) -m 0755 \
+		{} $(TARGET_DIR)/usr/local/lib/pd-externals/boids/
+	find $(@D) -type f -name "*.pd_linux" -print | xargs -I{} $(INSTALL) -m 0755 \
+		{} $(TARGET_DIR)/usr/local/lib/pd-externals/boids/
+#	$(MAKE) install DESTDIR="$(TARGET_DIR)" -C $(@D)
 endef
 
 $(eval $(generic-package))
