@@ -1,0 +1,6 @@
+#!/bin/sh
+git submodule update --init
+make O=$PWD -C buildroot/  BR2_EXTERNAL=../rk3308/ rockpis_defconfig
+
+# https://titanwolf.org/Network/Articles/Article?AID=dee8991f-d9d6-4a55-86ec-a4d3598c4ba0#gsc.tab=0
+
