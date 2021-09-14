@@ -24,7 +24,7 @@ PUREDATA_DEPENDENCIES = alsa-utils tcl tk gettext
 #endif
 
 define PUREDATA_RUN_AUTOGEN
-	cd $(@D) &&  PATH=$(HOST_PATH) ./autogen.sh
+	cd $(@D) && $(TARGET_MAKE_ENV)  ./autogen.sh
 endef
 PUREDATA_PRE_CONFIGURE_HOOKS += PUREDATA_RUN_AUTOGEN
 
