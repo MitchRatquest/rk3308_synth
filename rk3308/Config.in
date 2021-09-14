@@ -1,1 +1,1 @@
-source "$BR2_EXTERNAL_RK3308_PATH/package/Config.in"
+source "$BR2_EXTERNAL_rk3308_PATH/package/Config.in"
