@@ -1,0 +1,11 @@
+--- a/pd-lib-builder/Makefile.pdlibbuilder	2021-09-14 18:02:07.990284771 -0500
++++ b/pd-lib-builder/Makefile.pdlibbuilder	2021-09-14 18:02:28.854769173 -0500
+@@ -524,7 +524,7 @@
+   arch.c.flags =
+ endif
+ 
+-
++arch.c.flags = -mcpu=cortex-a35
+ #=== flags and paths for Linux =================================================
+ 
+ 
