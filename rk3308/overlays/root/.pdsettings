@@ -1,0 +1,25 @@
+audioapi: 1
+noaudioin: False
+audioindev1: 2 6
+audioindevname1: rockchip,rk3308-acodec (hardware)
+noaudioout: False
+audiooutdev1: 2 2
+audiooutdevname1: rockchip,rk3308-acodec (hardware)
+audiobuf: 7
+rate: 48000
+callback: 0
+blocksize: 64
+midiapi: 0
+nomidiin: True
+nomidiout: True
+path1: /usr/local/lib/pd-externals
+npath: 1
+standardpath: 1
+verbose: 0
+loadlib1: /usr/local/lib/pd-externals/zexy
+nloadlib: 1
+defeatrt: 0
+flags: 
+zoom: 1
+loading: no
+

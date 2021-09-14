@@ -1,0 +1,24 @@
+From 96abc92e2216ab0025f1e8e6a6edb5037f898a7d Mon Sep 17 00:00:00 2001
+From: MitchRatQuest <Mitchell.Dokken@gmail.com>
+Date: Sat, 11 Sep 2021 11:55:11 -0500
+Subject: [PATCH] Fix buildroot cross compilation
+
+---
+ Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index f17df5c..7e15aa1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -189,7 +189,6 @@ ifeq ($(UNAME),Linux)
+   EXTENSION = pd_linux
+   SHARED_EXTENSION = so
+   OS = linux
+-  PD_PATH = /usr
+   OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+   ALL_CFLAGS += -fPIC
+   ALL_LDFLAGS += -rdynamic -shared -fPIC -Wl,-rpath,"\$$ORIGIN",--enable-new-dtags
+-- 
+2.20.1
+

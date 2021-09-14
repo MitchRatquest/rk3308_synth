@@ -1,0 +1,11 @@
+--- a/src/x_text.c	2021-09-12 21:45:04.815896492 -0500
++++ b/src/x_text.c	2021-09-12 21:45:14.740127134 -0500
+@@ -551,7 +551,7 @@
+ #ifdef __APPLE__
+     qsort_r(sortbuf, nlines, sizeof(*sortbuf), &k, text_sortcompare);
+ #else /* __APPLE__ */
+-    qsort_r(sortbuf, nlines, sizeof(*sortbuf), text_sortcompare, &k);
++    qsort(sortbuf, nlines, sizeof(*sortbuf), text_sortcompare, &k);
+ #endif /* __APPLE__ */
+ #endif /* STUPID_SORT */
+     newb = binbuf_new();

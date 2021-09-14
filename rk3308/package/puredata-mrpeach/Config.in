@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PUREDATA_MRPEACH
+	bool "puredata-mrpeach"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  puredata external with utilities for networking, osc,
+	  slip, and other useful glue

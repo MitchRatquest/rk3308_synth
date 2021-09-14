@@ -1,0 +1,119 @@
+ColoredPrint() {
+    case "$1" in
+        red*)       color='\033[0;31m'  ;;
+        orange*)    color='\033[0;33m'  ;;
+        green*)     color='\033[0;32m'  ;;
+        cyan*)      color='\e[96m'      ;;
+        yellow*)    color='\e[33m'      ;;
+        blue*)      color='\e[34m'      ;;
+        magenta*)   color='\e[35m'      ;;
+        *)          color='\033[0m\e[0m';;
+    esac
+    nocolor='\033[0m\e[0m\e[0m'
+    shift
+    case "$1" in
+        ul*)    modifier='\e[4m'    ;;
+        inv*)   modifier='\e[7m'    ;;
+        bold*)  modifier='\e[1m'    ;;
+        *)      modifier='\e[0m'    ;;
+    esac
+    shift
+    printf "${color}${modifier}$@${nocolor}\n"
+}
+
+freeram() {
+    before=$(free -m | grep Mem: | awk '{print $3}')
+    sync
+    echo 1 > /proc/sys/vm/drop_caches
+    after=$(free -m | grep Mem: | awk '{print $3}')
+    echo "RAM before: " $before
+    echo "RAM after:  " $after
+    echo "RAM saved:  $(( $before - $after))"
+}
+
+function mkd() { mkdir -p "$1" && cd "$1"; }
+function up() {
+  if [ $# -le 0 ]; then
+    steps=1
+  else
+    steps="$1"
+  fi
+  string=""
+  for i in $(seq 1 $steps); do
+    string="$string../"
+  done
+  cd "$string"
+}
+
+left_pad()   { C=$((COLUMNS - 1)); sed -e :a -e "s/^.\{1,$C\}$/& /;ta"; }
+right_pad()  { C=$((COLUMNS - 1)); sed -e :a -e "s/^.\{1,$C\}$/ &/;ta"; }
+center_pad() { C=$((COLUMNS - 1)); sed -e :a -e "s/^.\{1,$C\}$/ & /;ta"; }
+ff() { #find file
+  if [ -z "${2}" ]; then
+    find . -type f -iname "*${1}*" 
+  else
+    find . -type f -maxdepth "${2}" -iname "*${1}*" 
+  fi
+}
+
+fd() { #find directory
+  if [ -z "${2}" ]; then
+    find . -type d -iname "*${1}*" 
+  else
+    find . -type d -maxdepth "${2}" -iname "*${1}*" 
+  fi
+}
+
+vf() {  vim "$(ff "$@" | fzf)"; }
+
+function gf() {
+  local thisfile=( $(grep -irHn "$@" * | fzf | awk -F':' '{print $1, "+"$2  }' ) )
+  if [ "$thisfile" ]; then
+      vim "${thisfile[0]}"  "${thisfile[1]}"
+  fi
+}
+lst() {
+    local input="$1"
+    if [ -n "$input" ] && [ "$input" -eq "$input" ] 2>/dev/null; then
+        list_number="$input"
+    else
+        dir="${1:-.}"
+    fi
+    local dir="${dir:-.}"
+    local list_number="${list_number:-3}"
+    #echo "${dir} ${list_number}"
+    ls -t "${dir}" | head -n "${list_number}"
+}
+
+cpuspeed() {
+  temp=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq | awk '{printf ("%0.0f",$1/1000); }' )
+  if [ "${#temp}" -ge 4 ]; then
+    echo $temp | awk '{printf ("%0.3f %s",$1/1000, "GHz"); }'
+  else
+    echo -ne "$temp MHz"
+  fi
+}
+
+cputemp() { 
+  awk '{printf ("%0.1f %s",$1/1000, "C")}'  /sys/devices/virtual/thermal/thermal_zone1/temp;
+}
+
+strip() { awk '{$1=$1};1'; }
+
+function memhog() {
+  ps aux  | awk '{print $6/1024 " MB\t\t" $11}'  | sort -n -r | grep -v "\[" | less
+}
+
+bigfiles() {
+  du -h | sort -hr | head -n20
+}
+
+
+gun() {
+  #Kill any process that matches name, like killall but better!
+  pids=($(pgrep -af "$@" | awk '{print $1}'))
+  for p in "${pids[@]}"; do
+    kill -9 "$p"
+  done
+}
+

@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PUREDATA_ADAPTIVE
+	bool "puredata-adaptive"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  an adative system which tries to learn from signals
+	  of the past

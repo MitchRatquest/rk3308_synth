@@ -1,0 +1,40 @@
+#N canvas 935 452 538 454 12;
+#X obj 64 214 tgl 15 0 empty empty empty 17 7 0 10 -4034 -1 -1 1 1
+;
+#X msg 51 18 connect 192.168.0.104 9999;
+#X msg 90 42 disconnect;
+#X obj 257 129 adc~;
+#X obj 333 47 vsl 15 128 0.02 2 1 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 12700 1;
+#X obj 353 47 vsl 15 128 0.02 2 1 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 12700 1;
+#X obj 257 153 *~;
+#X obj 282 171 *~;
+#X obj 58 285 osc~ 110;
+#X obj 58 322 dac~;
+#X obj 61 264 hsl 128 15 20 440 0 0 empty empty empty -2 -8 0 10 -262144
+-1 -1 12700 1;
+#X msg 104 67 format float;
+#X msg 121 93 format 16bit;
+#X msg 132 126 format 8bit;
+#X obj 330 272 cpuload;
+#X floatatom 330 297 5 0 0 0 - - -;
+#X msg 410 274 \; pd dsp 0 \;;
+#X msg 410 322 \; pd dsp 1 \;;
+#X obj 64 191 mrpeach/udpsend~ 2 512;
+#X connect 1 0 18 0;
+#X connect 2 0 18 0;
+#X connect 3 0 6 0;
+#X connect 3 1 7 0;
+#X connect 4 0 6 1;
+#X connect 5 0 7 1;
+#X connect 6 0 18 0;
+#X connect 7 0 18 1;
+#X connect 8 0 9 0;
+#X connect 8 0 9 1;
+#X connect 10 0 8 0;
+#X connect 11 0 18 0;
+#X connect 12 0 18 0;
+#X connect 13 0 18 0;
+#X connect 14 0 15 0;
+#X connect 18 0 0 0;

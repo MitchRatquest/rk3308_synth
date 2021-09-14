@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PYTHON_PYCHORD
+	bool "python-pchord"
+	depends on BR2_PACKAGE_PYTHON
+	help
+	  An implementation of the WebSocket Protocol (RFC 6455 &
+	  7692).
+
+	  https://github.com/aaugustin/websockets

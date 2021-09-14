@@ -1,0 +1,12 @@
+--- a/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/dhd_linux.c	2021-09-02 22:29:59.840695041 -0500
++++ b/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/dhd_linux.c	2021-09-02 22:30:33.109444675 -0500
+@@ -6962,7 +6962,7 @@
+ 		/* Copy out any request driver name */
+ 		if (copy_from_user(&info, uaddr, sizeof(info)))
+ 			return -EFAULT;
+-		strncpy(drvname, info.driver, sizeof(info.driver));
++		strncpy(drvname, info.driver, sizeof(drvname));
+ 		drvname[sizeof(info.driver)-1] = '\0';
+ 
+ 		/* clear struct for return */
+

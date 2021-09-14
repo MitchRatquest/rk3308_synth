@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_IEMSPEC2
+	bool "puredata-iemspec2"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  Collection of general purpose objects and filters

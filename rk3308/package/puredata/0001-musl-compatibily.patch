@@ -1,0 +1,23 @@
+From 9c7967d61f5ae0ec9dd30a48ab23c8a9b43a86c4 Mon Sep 17 00:00:00 2001
+From: MitchRatQuest <Mitchell.Dokken@gmail.com>
+Date: Fri, 10 Sep 2021 23:55:27 -0500
+Subject: [PATCH] musl-compatibily
+
+---
+ src/d_soundfile.c | 2 +-
+ src/x_text.c      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/d_soundfile.c b/src/d_soundfile.c
+index f7d8b9df..a71cab5c 100644
+--- a/src/d_soundfile.c
++++ b/src/d_soundfile.c
+@@ -32,7 +32,7 @@ objects use Posix-like threads.  */
+ #ifdef _LARGEFILE64_SOURCE
+ # define open open64
+ # define lseek lseek64
+-#define off_t __off64_t
++#define off_t off64_t
+ #endif
+ 
+ /* Microsoft Visual Studio does not define these... arg */

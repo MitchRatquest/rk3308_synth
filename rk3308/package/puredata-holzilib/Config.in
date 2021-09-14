@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PUREDATA_HOLZILIB
+	bool "puredata-holzilib"
+	depends on BR2_PACKAGE_PUREDATA
+	select BR2_PACKAGE_PUREDATA_ZEXY
+	select BR2_PACKAGE_PUREDATA_IEMLIB
+	select BR2_PACKAGE_PUREDATA_XSAMPLE
+	help
+	  a collection of useful patches

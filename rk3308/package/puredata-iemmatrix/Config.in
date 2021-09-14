@@ -1,0 +1,7 @@
+config BR2_PACKAGE_PUREDATA_IEMMATRIX
+	bool "puredata-iemmatrix"
+	depends on BR2_PACKAGE_PUREDATA
+	select BR2_PACKAGE_FFTW
+	select BR2_PACKAGE_LIBSNDFILE
+	help
+	  Collection of general purpose objects and filters

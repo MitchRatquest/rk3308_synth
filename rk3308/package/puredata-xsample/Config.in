@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PUREDATA_XSAMPLE
+	bool "puredata-xsample"
+	depends on BR2_PACKAGE_PUREDATA
+	select BR2_PACKAGE_FLEXT
+	help
+	  Extended sample objects

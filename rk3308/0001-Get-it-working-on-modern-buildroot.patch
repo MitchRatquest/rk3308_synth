@@ -1,0 +1,484 @@
+From acfc7746953fa3885269ff7468f92c26b5362b71 Mon Sep 17 00:00:00 2001
+From: MitchRatQuest <Mitchell.Dokken@gmail.com>
+Date: Fri, 10 Sep 2021 23:22:38 -0500
+Subject: [PATCH] Get it working on modern buildroot
+
+---
+ board/RK3308/genimage.cfg             |  10 +-
+ board/RK3308/post-build.sh            |  12 +-
+ board/RK3308/post-image.sh            |  13 +-
+ board/RK3308/vars.txt                 |   3 +-
+ configs/rockpis_defconfig             | 166 +++++++++++++++-----------
+ overlays/empty                        |   1 -
+ overlays/etc/dnsmasq.conf             |   5 +
+ overlays/etc/init.d/S21usb            |  76 ++++++++++++
+ overlays/etc/network/interfaces       |  12 ++
+ overlays/etc/ssh/sshd_config          |   5 +
+ patches.rockpis/linux/0009-wifi.patch |  12 ++
+ 11 files changed, 229 insertions(+), 86 deletions(-)
+ delete mode 100644 overlays/empty
+ create mode 100644 overlays/etc/dnsmasq.conf
+ create mode 100755 overlays/etc/init.d/S21usb
+ create mode 100644 overlays/etc/network/interfaces
+ create mode 100644 overlays/etc/ssh/sshd_config
+ create mode 100644 patches.rockpis/linux/0009-wifi.patch
+
+diff --git a/board/RK3308/genimage.cfg b/board/RK3308/genimage.cfg
+index 0189916..8dd61c7 100644
+--- a/board/RK3308/genimage.cfg
++++ b/board/RK3308/genimage.cfg
+@@ -7,7 +7,7 @@ image boot.vfat {
+ 			rockchip/*
+ 		}
+ 	}
+-	size = 111M
++	size = 16M
+ }
+ 
+ image sdcard.img {
+@@ -17,19 +17,19 @@ image sdcard.img {
+ 	}
+ 
+ 	partition loader1 {
+-    in-partition-table = "no"
++		in-partition-table = "no"
+ 		image = "idbloader.img"
+ 		offset = 32K
+ 	}
+ 
+ 	partition loader2 {
+-    in-partition-table = "no"
++		in-partition-table = "no"
+ 		image = "uboot.img"
+ 		offset = 8M
+ 	}
+ 
+ 	partition trust {
+-    in-partition-table = "no"
++		in-partition-table = "no"
+ 		image = "trust.img"
+ 		offset = 12M
+ 	}
+@@ -44,6 +44,6 @@ image sdcard.img {
+ 	partition rootfs {
+ 		partition-type = 0x83
+ 		image = "rootfs.ext4"
+-    offset=128M
++		offset=64M
+ 	}
+ }
+diff --git a/board/RK3308/post-build.sh b/board/RK3308/post-build.sh
+index ed60ab3..b3df863 100755
+--- a/board/RK3308/post-build.sh
++++ b/board/RK3308/post-build.sh
+@@ -1,9 +1,9 @@
+ #!/bin/sh
+ 
+ # fix eth0
+-cnt=`grep -c eth0 $TARGET_DIR/etc/network/interfaces`
+-if [ $cnt -eq "0" ]; then
+-  echo "">> $TARGET_DIR/etc/network/interfaces
+-  echo "auto eth0">> $TARGET_DIR/etc/network/interfaces
+-  echo "iface eth0 inet dhcp">> $TARGET_DIR/etc/network/interfaces
+-fi
++#cnt=`grep -c eth0 $TARGET_DIR/etc/network/interfaces`
++#if [ $cnt -eq "0" ]; then
++#  echo "">> $TARGET_DIR/etc/network/interfaces
++#  echo "auto eth0">> $TARGET_DIR/etc/network/interfaces
++#  echo "iface eth0 inet dhcp">> $TARGET_DIR/etc/network/interfaces
++#fi
+diff --git a/board/RK3308/post-image.sh b/board/RK3308/post-image.sh
+index 70bfd4b..339243c 100755
+--- a/board/RK3308/post-image.sh
++++ b/board/RK3308/post-image.sh
+@@ -15,14 +15,17 @@ if [ $RKCHIP = "RK3308" ]; then
+ fi
+ 
+ # copy uboot variable file over
+-cp -a $BR2_EXTERNAL_RK3308_PATH/board/RK3308/vars.txt $BINARIES_DIR/
++SCRIPT_DIR="$(dirname $0)"
++#SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
++#echo "HERE I AM: $SCRIPT_DIR"
++cp -a $SCRIPT_DIR/vars.txt $BINARIES_DIR/
+ 
+ # copy overlays over
+ linuxDir=`find $BASE_DIR/build -name 'vmlinux' -type f | xargs dirname`
+ mkdir -p $BINARIES_DIR/rockchip/overlays
+ cp -a ${linuxDir}/arch/arm64/boot/dts/rockchip/overlay/*.dtbo $BINARIES_DIR/rockchip/overlays
+ 
+-ubootName=`find $BASE_DIR/build -name 'uboot-*' -type d`
++ubootName=`find $BASE_DIR/build -name 'uboot-[0-9]*' -type d`
+ boardDir=`dirname $_`
+ 
+ # uboot creation
+@@ -37,7 +40,7 @@ MINOR=0
+ SEC=0
+ [BL31_OPTION]
+ SEC=1
+-PATH=$BR2_EXTERNAL_RK3308_PATH/board/RK3308/rk3308_bl31_v2.10.elf
++PATH=$SCRIPT_DIR/rk3308_bl31_v2.10.elf
+ ADDR=0x00010000
+ [BL32_OPTION]
+ SEC=0
+@@ -53,11 +56,11 @@ $ubootName/tools/mkimage -n rk3308 -T rksd -d $boardDir/rk3308_ddr_589MHz_uart0_
+ cat $boardDir/rk3308_miniloader_emmc_port_support_sd_20190717.bin >> $BINARIES_DIR/idbloader.img
+ 
+ # Generate the uboot script
+-$ubootName/tools/mkimage -C none -A arm -T script -d $BR2_EXTERNAL_RK3308_PATH/board/RK3308/boot.cmd $BINARIES_DIR/boot.scr
++$ubootName/tools/mkimage -C none -A arm -T script -d $SCRIPT_DIR/boot.cmd $BINARIES_DIR/boot.scr
+ 
+ # Put the device trees into the correct location
+ mkdir -p $BINARIES_DIR/rockchip; cp -a $BINARIES_DIR/*.dtb $BINARIES_DIR/rockchip
+-$BASE_DIR/../support/scripts/genimage.sh -c $BR2_EXTERNAL_RK3308_PATH/board/RK3308/genimage.cfg
++$BASE_DIR/../support/scripts/genimage.sh -c $SCRIPT_DIR/genimage.cfg
+ 
+ echo
+ echo
+diff --git a/board/RK3308/vars.txt b/board/RK3308/vars.txt
+index 0c32ebe..91f9bc6 100644
+--- a/board/RK3308/vars.txt
++++ b/board/RK3308/vars.txt
+@@ -1,2 +1,3 @@
+-overlays=rk3308-uart0
++overlays=rk3308-console-on-uart0
++console=ttyS0,115200n8
+ fdtfile=rockchip/rockpi-s-linux.dtb
+diff --git a/configs/rockpis_defconfig b/configs/rockpis_defconfig
+index e1dc52d..7289f4a 100644
+--- a/configs/rockpis_defconfig
++++ b/configs/rockpis_defconfig
+@@ -1,86 +1,116 @@
+-BR2_TARGET_GENERIC_HOSTNAME="rockpis"
+-BR2_TARGET_GENERIC_ISSUE="Welcome to a RockPi S OS"
+-
+-# board/compiler target setup
+ BR2_aarch64=y
+ BR2_cortex_a35=y
+-
+-# Rock-Chip repos - mostly for sdcard image generation
+-BR2_PACKAGE_RKBIN=y
+-BR2_PACKAGE_RKTOOLS=y
+-BR2_PACKAGE_RKDEVICE=y
+-
+-# post build sdcard image generaton
++BR2_DL_DIR="$(BASE_DIR)/../../buildroot.dl"
++BR2_CCACHE=y
++BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL)/patches.rockpis"
++BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_4_4=y
++BR2_TOOLCHAIN_BUILDROOT_WCHAR=y
++BR2_TOOLCHAIN_BUILDROOT_CXX=y
++BR2_TOOLCHAIN_BUILDROOT_FORTRAN=y
++BR2_GCC_ENABLE_LTO=y
++BR2_TARGET_GENERIC_HOSTNAME="rockpis"
++BR2_TARGET_GENERIC_ISSUE="Welcome to a RockPi S OS"
++BR2_TARGET_GENERIC_ROOT_PASSWD="root"
++BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL)/overlays"
+ BR2_ROOTFS_POST_BUILD_SCRIPT="$(BR2_EXTERNAL)/board/RK3308/post-build.sh"
+ BR2_ROOTFS_POST_IMAGE_SCRIPT="$(BR2_EXTERNAL)/board/RK3308/post-image.sh"
+ BR2_ROOTFS_POST_SCRIPT_ARGS="RK3308"
+-
+-# Filesystems
+-BR2_TARGET_ROOTFS_EXT2=y
+-BR2_TARGET_ROOTFS_EXT2_4=y
+-BR2_TARGET_ROOTFS_EXT2_SIZE="250M"
+-BR2_PACKAGE_HOST_DOSFSTOOLS=y
+-BR2_PACKAGE_HOST_MTOOLS=y
+-BR2_PACKAGE_HOST_UBOOT_TOOLS=y
+-BR2_PACKAGE_HOST_GENIMAGE=y
+-
+-# u-boot
+-BR2_TARGET_UBOOT=y
+-BR2_TARGET_UBOOT_BUILD_SYSTEM_KCONFIG=y
+-BR2_TARGET_UBOOT_USE_DEFCONFIG=y
+-BR2_TARGET_UBOOT_CUSTOM_GIT=y
+-BR2_TARGET_UBOOT_CUSTOM_REPO_URL="https://github.com/radxa/u-boot.git"
+-#BR2_TARGET_UBOOT_BOARD_DEFCONFIG="rockpi-s-rk3308"
+-#BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="stable-4.4-rockpis"
+-BR2_TARGET_UBOOT_BOARD_DEFCONFIG="rock-pi-s-rk3308"
+-BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="233a23e3ed0b3e5250253ee455c3c5df2080f99c"
+-BR2_TARGET_UBOOT_NEEDS_DTC=y
+-BR2_TARGET_UBOOT_FORMAT_BIN=y
+-BR2_TARGET_UBOOT_FORMAT_IMG=n
+-BR2_TARGET_UBOOT_SPL=n
+-BR2_TARGET_UBOOT_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL)/board/RK3308/uboot.fragment"
+-BR2_PACKAGE_HOST_DTC=y
+-
+-# linux
+ BR2_LINUX_KERNEL=y
+-BR2_LINUX_KERNEL_PATCH=""
+-BR2_LINUX_KERNEL_CUSTOM_LOGO_PATH=""
+-BR2_LINUX_KERNEL_DTS_SUPPORT=y
+-BR2_LINUX_KERNEL_IMAGE=y
+-BR2_LINUX_KERNEL_GZIP=y
+-BR2_LINUX_KERNEL_DTB_OVERLAY_SUPPORT=y
+-
+ BR2_LINUX_KERNEL_CUSTOM_GIT=y
+ BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/radxa/kernel.git"
+ BR2_LINUX_KERNEL_CUSTOM_REPO_VERSION="stable-4.4-rockpis"
+-BR2_LINUX_KERNEL_INTREE_DTS_NAME="rockchip/rockpi-s-linux"
+ BR2_LINUX_KERNEL_DEFCONFIG="rk3308_linux"
+-BR2_PACKAGE_HOST_LINUX_HEADERS_CUSTOM_4_4=y
+-
+-# configure the place to source patches, the busybox frament, overlays
+-BR2_GLOBAL_PATCH_DIR="$(BR2_EXTERNAL)/patches.rockpis"
+-BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL)/board/RK3308/busybox.fragment"
+-BR2_ROOTFS_OVERLAY="$(BR2_EXTERNAL)/overlays"
+-
+-# where to store downloads
+-BR2_DL_DIR="$(BASE_DIR)/../../buildroot.dl"
+-
+-# An example kernel module and devicetree overlay
+-BR2_PACKAGE_EXAMPLE_MODULE_OVERLAY=y
+ BR2_LINUX_KERNEL_CONFIG_FRAGMENT_FILES=" $(BR2_EXTERNAL)/package/example-module-overlay/module-overlay-rk3308/kernel.fragment"
+-
+-# networking
+-BR2_PACKAGE_OPENSSH=y
+-BR2_PACKAGE_OPENSSH_SERVER=y
+-BR2_PACKAGE_OPENSSH_CLIENT=y
+-BR2_SYSTEM_DHCP="eth0"
++BR2_LINUX_KERNEL_DTS_SUPPORT=y
++BR2_LINUX_KERNEL_INTREE_DTS_NAME="rockchip/rockpi-s-linux"
++BR2_LINUX_KERNEL_DTB_OVERLAY_SUPPORT=y
++BR2_PACKAGE_BUSYBOX_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL)/board/RK3308/busybox.fragment"
++BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
++BR2_PACKAGE_ALSA_UTILS=y
++BR2_PACKAGE_ALSA_UTILS_ALSACONF=y
++BR2_PACKAGE_ALSA_UTILS_ACONNECT=y
++BR2_PACKAGE_ALSA_UTILS_ALSALOOP=y
++BR2_PACKAGE_ALSA_UTILS_ALSAUCM=y
++BR2_PACKAGE_ALSA_UTILS_ALSATPLG=y
++BR2_PACKAGE_ALSA_UTILS_AMIDI=y
++BR2_PACKAGE_ALSA_UTILS_AMIXER=y
++BR2_PACKAGE_ALSA_UTILS_APLAY=y
++BR2_PACKAGE_ALSA_UTILS_APLAYMIDI=y
++BR2_PACKAGE_ALSA_UTILS_ARECORDMIDI=y
++BR2_PACKAGE_ALSA_UTILS_ASEQNET=y
++BR2_PACKAGE_ALSA_UTILS_BAT=y
++BR2_PACKAGE_ALSA_UTILS_IECSET=y
++BR2_PACKAGE_ALSA_UTILS_SPEAKER_TEST=y
++BR2_PACKAGE_PIGZ=y
++BR2_PACKAGE_LSOF=y
++BR2_PACKAGE_MEMSTAT=y
++BR2_PACKAGE_RAMSPEED=y
++BR2_PACKAGE_STRACE=y
++BR2_PACKAGE_STRESS=y
++BR2_PACKAGE_BINUTILS=y
++BR2_PACKAGE_BINUTILS_TARGET=y
++BR2_PACKAGE_GAWK=y
++BR2_PACKAGE_GREP=y
++BR2_PACKAGE_JO=y
++BR2_PACKAGE_JQ=y
++BR2_PACKAGE_PATCH=y
++BR2_PACKAGE_SED=y
++BR2_PACKAGE_TREE=y
++BR2_PACKAGE_E2TOOLS=y
++BR2_PACKAGE_MMC_UTILS=y
++BR2_PACKAGE_SETSERIAL=y
++BR2_PACKAGE_STM32FLASH=y
++BR2_PACKAGE_UBOOT_TOOLS=y
++BR2_PACKAGE_UBOOT_TOOLS_MKIMAGE=y
++BR2_PACKAGE_NCURSES_WCHAR=y
++BR2_PACKAGE_NCURSES_TARGET_PROGS=y
++BR2_PACKAGE_HAVEGED=y
+ BR2_PACKAGE_AVAHI=y
+ BR2_PACKAGE_AVAHI_DAEMON=y
+-
+-# bluetooth
+-BR2_TOOLCHAIN_BUILDROOT_WCHAR=y
+ BR2_PACKAGE_BLUEZ5_UTILS=y
+ BR2_PACKAGE_BLUEZ5_UTILS_CLIENT=y
+ BR2_PACKAGE_BLUEZ5_UTILS_DEPRECATED=y
+ BR2_PACKAGE_BLUEZ5_UTILS_PLUGINS_NFC=y
++BR2_PACKAGE_OPENSSH=y
++BR2_PACKAGE_RSYNC=y
++BR2_PACKAGE_SOCAT=y
++BR2_PACKAGE_WAVEMON=y
++BR2_PACKAGE_WGET=y
++BR2_PACKAGE_BASH=y
++BR2_PACKAGE_FILE=y
++BR2_PACKAGE_SCREEN=y
++BR2_PACKAGE_TIME=y
++BR2_PACKAGE_WHICH=y
++BR2_PACKAGE_COREUTILS=y
++BR2_PACKAGE_COREUTILS_INDIVIDUAL_BINARIES=y
++BR2_PACKAGE_HTOP=y
++BR2_PACKAGE_KMOD=y
++BR2_PACKAGE_KMOD_TOOLS=y
++BR2_PACKAGE_UTIL_LINUX_KILL=y
++BR2_PACKAGE_UTIL_LINUX_LAST=y
++BR2_PACKAGE_UTIL_LINUX_LINE=y
++BR2_PACKAGE_UTIL_LINUX_RFKILL=y
++BR2_PACKAGE_UTIL_LINUX_SWITCH_ROOT=y
++BR2_PACKAGE_LESS=y
++BR2_PACKAGE_NANO=y
++BR2_PACKAGE_VIM=y
++BR2_TARGET_ROOTFS_EXT2=y
++BR2_TARGET_ROOTFS_EXT2_4=y
++BR2_TARGET_ROOTFS_EXT2_SIZE="250M"
++BR2_TARGET_UBOOT=y
++BR2_TARGET_UBOOT_BUILD_SYSTEM_KCONFIG=y
++BR2_TARGET_UBOOT_CUSTOM_GIT=y
++BR2_TARGET_UBOOT_CUSTOM_REPO_URL="https://github.com/radxa/u-boot.git"
++BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="233a23e3ed0b3e5250253ee455c3c5df2080f99c"
++BR2_TARGET_UBOOT_BOARD_DEFCONFIG="rock-pi-s-rk3308"
++BR2_TARGET_UBOOT_CONFIG_FRAGMENT_FILES="$(BR2_EXTERNAL)/board/RK3308/uboot.fragment"
++BR2_TARGET_UBOOT_NEEDS_DTC=y
++BR2_PACKAGE_HOST_DOSFSTOOLS=y
++BR2_PACKAGE_HOST_GENIMAGE=y
++BR2_PACKAGE_HOST_MTOOLS=y
++BR2_PACKAGE_HOST_UBOOT_TOOLS=y
++BR2_PACKAGE_RKBIN=y
++BR2_PACKAGE_RKTOOLS=y
++BR2_PACKAGE_RKDEVICE=y
+ BR2_PACKAGE_RTK_HCIATTACH=y
++BR2_PACKAGE_EXAMPLE_MODULE_OVERLAY=y
+diff --git a/overlays/empty b/overlays/empty
+deleted file mode 100644
+index 8b13789..0000000
+--- a/overlays/empty
++++ /dev/null
+@@ -1 +0,0 @@
+-
+diff --git a/overlays/etc/dnsmasq.conf b/overlays/etc/dnsmasq.conf
+new file mode 100644
+index 0000000..c9b00c5
+--- /dev/null
++++ b/overlays/etc/dnsmasq.conf
+@@ -0,0 +1,5 @@
++interface=usb0
++dhcp-range=option:router,192.168.100.2,192.168.100.200,6h
++dhcp-option=3
++dhcp-option=6
++dhcp-option=121,192.168.100.0/24
+diff --git a/overlays/etc/init.d/S21usb b/overlays/etc/init.d/S21usb
+new file mode 100755
+index 0000000..40ccc50
+--- /dev/null
++++ b/overlays/etc/init.d/S21usb
+@@ -0,0 +1,76 @@
++#! /bin/sh
++
++NAME=interface
++
++case "$1" in
++  start)
++    printf "Starting $NAME: "
++	echo mmc0 > /sys/class/leds/nanopi:blue:status/trigger
++	#USB OTG midi/eth/mass storage below
++	modprobe libcomposite
++	mount -t configfs none /sys/kernel/config
++	cd /sys/kernel/config/usb_gadget
++	mkdir g1
++	cd g1
++
++	echo 0x1d6b > idVendor # Linux Foundation
++	echo 0x0104 > idProduct # Multifunction Composite Gadget
++	echo 0x0100 > bcdDevice # v1.0.0
++	echo 0x0200 > bcdUSB # USB2
++
++	mkdir -p strings/0x409
++	echo "fedcba9876543210" > strings/0x409/serialnumber
++	echo "DONGLE" > strings/0x409/manufacturer 
++	echo "CHANDLE" > strings/0x409/product 
++
++	mkdir -p functions/rndis.usb0
++	#mkdir -p functions/mass_storage.usb0
++	mkdir -p functions/midi.usb0
++
++	#FILE=/root/store
++
++	#echo 1 > functions/mass_storage.usb0/stall
++	#echo 0 > functions/mass_storage.usb0/lun.0/cdrom
++	#echo 0 > functions/mass_storage.usb0/lun.0/ro
++	#echo 0 > functions/mass_storage.usb0/lun.0/nofua
++	#echo $FILE > functions/mass_storage.usb0/lun.0/file
++
++	mkdir configs/c.1
++	mkdir configs/c.1/strings/0x409
++
++	echo "Config 1: RNDIS network" > configs/c.1/strings/0x409/configuration
++
++	echo 500 > configs/c.1/MaxPower
++
++	ln -s functions/midi.usb0 configs/c.1
++	ln -s functions/rndis.usb0 configs/c.1
++	#ln -s functions/mass_storage.usb0 configs/c.1
++
++	ls /sys/class/udc > UDC
++	#USB OTG midi/eth/mass storage above
++
++#	modprobe g_ether #just ethernet
++	ifup usb0
++	ifup -a #need this for X11 forwarding apparently
++    [ $? = 0 ] && echo "OK" || echo "FAIL"
++    ;;
++  stop)
++    printf "Stopping $NAME: "
++	echo none > /sys/class/leds/nanopi:blue:status/trigger
++	ifdown usb0
++	modprobe -r g_ether
++    [ $? = 0 ] && echo "OK" || echo "FAIL"
++    ;;
++  restart|reload)
++    echo "Restarting $NAME: "
++    $0 stop
++    sleep 1
++    $0 start
++    ;;
++  *)
++    echo "Usage: $0 {start|stop|restart|reload}" >&2
++    exit 1
++    ;;
++esac
++
++exit 0
+diff --git a/overlays/etc/network/interfaces b/overlays/etc/network/interfaces
+new file mode 100644
+index 0000000..583faa4
+--- /dev/null
++++ b/overlays/etc/network/interfaces
+@@ -0,0 +1,12 @@
++auto lo
++iface lo inet loopback
++
++auto eth0
++iface eth0 inet dhcp
++
++auto usb0
++iface usb0 inet static
++	wait-delay 15
++	address 192.168.100.1
++	netmask 255.255.255.0
++	gateway 192.168.100.1
+diff --git a/overlays/etc/ssh/sshd_config b/overlays/etc/ssh/sshd_config
+new file mode 100644
+index 0000000..bd6e395
+--- /dev/null
++++ b/overlays/etc/ssh/sshd_config
+@@ -0,0 +1,5 @@
++PermitRootLogin yes
++
++#X11Forwarding yes
++#X11DisplayOffset 10
++#X11UseLocalhost yes
+diff --git a/patches.rockpis/linux/0009-wifi.patch b/patches.rockpis/linux/0009-wifi.patch
+new file mode 100644
+index 0000000..c0db727
+--- /dev/null
++++ b/patches.rockpis/linux/0009-wifi.patch
+@@ -0,0 +1,12 @@
++--- a/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/dhd_linux.c	2021-09-02 22:29:59.840695041 -0500
+++++ b/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/dhd_linux.c	2021-09-02 22:30:33.109444675 -0500
++@@ -6962,7 +6962,7 @@
++ 		/* Copy out any request driver name */
++ 		if (copy_from_user(&info, uaddr, sizeof(info)))
++ 			return -EFAULT;
++-		strncpy(drvname, info.driver, sizeof(info.driver));
+++		strncpy(drvname, info.driver, sizeof(drvname));
++ 		drvname[sizeof(info.driver)-1] = '\0';
++ 
++ 		/* clear struct for return */
++
+-- 
+2.20.1
+

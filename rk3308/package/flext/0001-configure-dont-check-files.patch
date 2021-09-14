@@ -1,0 +1,49 @@
+--- a/configure.ac	2021-09-12 13:12:43.712757234 -0500
++++ b/configure.ac	2021-09-12 13:14:24.283079859 -0500
+@@ -47,8 +47,8 @@
+ if test $SYSTEM == max; then
+ 	AC_DEFINE(FLEXT_SYS,1)
+ # check for MaxAPI.h in pd folder
+-	AC_CHECK_FILE([$sdkdir/max-includes/MaxAPI.h],,AC_MSG_ERROR([Cannot find $sdkdir/max-includes/MaxAPI.h]))
+-	AC_CHECK_FILE([$sdkdir/max-includes/MaxAudioAPI.h],,AC_MSG_ERROR([Cannot find $sdkdir/max-includes/MaxAudioAPI.h]))
++	#AC_CHECK_FILE([$sdkdir/max-includes/MaxAPI.h],,AC_MSG_ERROR([Cannot find $sdkdir/max-includes/MaxAPI.h]))
++	#AC_CHECK_FILE([$sdkdir/max-includes/MaxAudioAPI.h],,AC_MSG_ERROR([Cannot find $sdkdir/max-includes/MaxAudioAPI.h]))
+ 	INCLUDEDIRS="$INCLUDEDIRS $sdkdir/max-includes $sdkdir/msp-includes"
+ 
+ elif test $SYSTEM == pd; then
+@@ -57,7 +57,7 @@
+ 
+ 	AC_DEFINE(FLEXT_SYS,2)
+ # check for g_canvas.h in pd folder
+-	AC_CHECK_FILE([$sdkdir/g_canvas.h],,AC_MSG_ERROR([Cannot find $sdkdir/g_canvas.h]))
++	#AC_CHECK_FILE([$sdkdir/g_canvas.h],,AC_MSG_ERROR([Cannot find $sdkdir/g_canvas.h]))
+ 	INCLUDEDIRS="$INCLUDEDIRS $sdkdir"
+ 
+ 	if test $win; then
+@@ -71,7 +71,7 @@
+ AC_ARG_WITH(atomic_ops,
+ 	AC_HELP_STRING(--with-atomic_ops,[path to atomic_ops library (needed for gcc version < 4.1 on non-i386 cpus)]),
+ 	[
+-	    AC_CHECK_FILE([$withval/atomic_ops.h],,AC_MSG_ERROR([Cannot find $withval/atomic_ops.h]))	
++	    #AC_CHECK_FILE([$withval/atomic_ops.h],,AC_MSG_ERROR([Cannot find $withval/atomic_ops.h]))	
+ 		INCLUDEDIRS="$INCLUDEDIRS $withval"
+         AC_DEFINE(USE_ATOMIC_OPS)
+ 	]
+@@ -80,7 +80,7 @@
+ AC_ARG_WITH(stkdir,
+ 	AC_HELP_STRING(--with-stkdir,[path to STK headers]),
+ 	[
+-	    AC_CHECK_FILE([$withval/Stk.h],,AC_MSG_ERROR([Cannot find $withval/Stk.h]))	
++	    #AC_CHECK_FILE([$withval/Stk.h],,AC_MSG_ERROR([Cannot find $withval/Stk.h]))	
+ 		stkdir=$withval
+ 		INCLUDEDIRS="$INCLUDEDIRS $withval"
+ 	]
+@@ -91,7 +91,7 @@
+ AC_ARG_WITH(sndobjdir,
+ 	AC_HELP_STRING(--with-sndobjdir,[path to SndObj headers]),
+ 	[
+-		AC_CHECK_FILE([$withval/SndObj.h],,AC_MSG_ERROR([Cannot find $withval/SndObj.h]))
++		#AC_CHECK_FILE([$withval/SndObj.h],,AC_MSG_ERROR([Cannot find $withval/SndObj.h]))
+ 		sndobjdir=$withval
+ 		INCLUDEDIRS="$INCLUDEDIRS $withval"
+ 	]

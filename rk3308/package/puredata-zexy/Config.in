@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_ZEXY
+	bool "puredata-zexy"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  The swiss army knife for puredata
