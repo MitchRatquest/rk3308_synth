@@ -59,7 +59,7 @@ $ubootName/tools/mkimage -C none -A arm -T script -d $SCRIPT_DIR/boot.cmd $BINAR
 
 # Put the device trees into the correct location
 mkdir -p $BINARIES_DIR/rockchip; cp -a $BINARIES_DIR/*.dtb $BINARIES_DIR/rockchip
-$BASE_DIR/buildroot/board/genimage.sh -c $SCRIPT_DIR/genimage.cfg
+$BASE_DIR/buildroot/support/scripts/genimage.sh -c $SCRIPT_DIR/genimage.cfg
 
 echo
 echo
