@@ -6,7 +6,7 @@ RKCHIP_LOADER=$2
 RKCHIP=$2
 
 if [ $RKCHIP = "RK3308" ]; then
-  if grep -q '^CONFIG_ARM64_BOOT_AARCH32=y' ${BASE_DIR}/../.config ; then
+  if grep -q '^CONFIG_ARM64_BOOT_AARCH32=y' ${BASE_DIR}/.config ; then
     PLATFORM_UBOOT_IMG_SIZE="--size 512 2"
     PLATFORM_AARCH32="AARCH32"
   else
@@ -59,7 +59,7 @@ $ubootName/tools/mkimage -C none -A arm -T script -d $SCRIPT_DIR/boot.cmd $BINAR
 
 # Put the device trees into the correct location
 mkdir -p $BINARIES_DIR/rockchip; cp -a $BINARIES_DIR/*.dtb $BINARIES_DIR/rockchip
-$BASE_DIR/../board/genimage.sh -c $SCRIPT_DIR/genimage.cfg
+$BASE_DIR/board/genimage.sh -c $SCRIPT_DIR/genimage.cfg
 
 echo
 echo
@@ -71,5 +71,4 @@ echo write your image to the sdcard, don\'t forget to change OF=/dev/sdb to your
 echo use the following command ...
 echo
 echo 'OF=/dev/sdb; rootDrive=`mount | grep " / " | grep $OF`; if [ -z $rootDrive ]; then sudo umount $OF[123456789]; sudo dd if=output/images/sdcard.img of=$OF; else echo you are trying to overwrite your root drive; fi'
-echo
 echo
