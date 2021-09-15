@@ -1,6 +1,6 @@
 date --set="Fri Sept 10 2021 23:39:44 CST"
-export FZF_DEFAULT_COMMAND=ls
-export FZF_DEFAULT_OPTS=--height 40% --layout=reverse
+export FZF_DEFAULT_COMMAND="ls"
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"
 
 ColoredPrint() {
     case "$1" in
