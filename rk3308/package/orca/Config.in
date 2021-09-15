@@ -1,7 +1,8 @@
 config BR2_PACKAGE_ORCA
 	bool "orca"
 	select BR2_PACKAGE_NCURSES
-
+	select BR2_PACKAGE_NCURSES_WCHAR
+	
 	help
 	  Orca is an esoteric programming language designed 
 	  to quickly create procedural sequencers
