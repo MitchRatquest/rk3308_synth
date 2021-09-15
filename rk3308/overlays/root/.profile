@@ -1,3 +1,7 @@
+date --set="Fri Sept 10 2021 23:39:44 CST"
+export FZF_DEFAULT_COMMAND=ls
+export FZF_DEFAULT_OPTS=--height 40% --layout=reverse
+
 ColoredPrint() {
     case "$1" in
         red*)       color='\033[0;31m'  ;;
@@ -108,7 +112,6 @@ bigfiles() {
   du -h | sort -hr | head -n20
 }
 
-
 gun() {
   #Kill any process that matches name, like killall but better!
   pids=($(pgrep -af "$@" | awk '{print $1}'))
@@ -116,4 +119,3 @@ gun() {
     kill -9 "$p"
   done
 }
-
