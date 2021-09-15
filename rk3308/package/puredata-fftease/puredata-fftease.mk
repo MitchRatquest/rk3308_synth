@@ -26,7 +26,8 @@ define PUREDATA_FFTEASE_INSTALL_TARGET_CMDS
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/fftease/
 	find $(@D) -type f -name "*.pd_linux" -print | xargs -I{} $(INSTALL) -m 0755 \
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/fftease/
-	#$(MAKE) install DESTDIR="$(TARGET_DIR)" -C $(@D)
+	find $(@D) -type -f -name "*.so" -print | xargs -I{} $(INSTALL) -m 0755 \
+		{} $(TARGET_DIR)/usr/local/lib/pd-externals/fftease/
 endef
 
 $(eval $(generic-package))
