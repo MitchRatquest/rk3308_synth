@@ -1,4 +1,5 @@
 menu "Packages"
+source "$BR2_EXTERNAL_rk3308_PATH/package/orca/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/puredata/Config.in"
 
 if BR2_PACKAGE_PUREDATA
@@ -29,6 +30,7 @@ menu "Puredata externals"
 endmenu
 endif 
 
+source "$BR2_EXTERNAL_rk3308_PATH/package/python-pychord/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/gtkiostream/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/rkbin/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/rktools/Config.in"
