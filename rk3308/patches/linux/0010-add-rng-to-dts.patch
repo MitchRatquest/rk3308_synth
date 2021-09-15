@@ -1,0 +1,13 @@
+--- a/arch/arm64/boot/dts/rockchip/rockpi-s-linux.dts	2021-09-15 08:45:50.399471870 -0500
++++ b/arch/arm64/boot/dts/rockchip/rockpi-s-linux.dts	2021-09-15 08:49:19.180233525 -0500
+@@ -243,6 +243,10 @@
+ 	status = "okay";
+ };
+ 
++&rng {
++	status = "okay";
++};
++
+ &io_domains {
+ 	status = "okay";
+ 
