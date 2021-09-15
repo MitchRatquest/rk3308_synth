@@ -1,0 +1,42 @@
+--- a/Makefile	2019-12-15 16:58:55.029896481 -0600
++++ b/Makefile	2019-12-15 16:56:42.441253994 -0600
+@@ -1,13 +1,9 @@
+-all: debug
++CC = gcc
++CFLAGS = -std=c99 -pipe -O3
++LIBS = -lrt -lncurses -lmenu -lform
++TARGET = orca
++SRCS = gbuffer.c field.c mark.c bank.c sim.c osc_out.c term_util.c tui_main.c
+
+-.PHONY: debug
+-debug:
+-	@./tool build debug orca
++all:
++	$(CC) $(CFLAGS) $(SRCS) $(LIBS) -o $(TARGET)
+
+-.PHONY: release
+-release:
+-	@./tool build release orca
+-
+-.PHONY: clean
+-clean:
+-	@./tool clean
+--- a/term_util.c	2019-12-15 17:02:04.869056696 -0600
++++ b/term_util.c	2019-12-15 17:02:18.512574820 -0600
+@@ -1,3 +1,4 @@
++#include <stddef.h>
+ #include "term_util.h"
+ #include <ctype.h>
+ #include <form.h>
+--- a/tui_main.c 2019-12-15 17:05:13.528049984 -0600
++++ b/tui_main.c	2019-12-15 17:05:22.633786528 -0600
+@@ -10,7 +10,7 @@
+ #include <locale.h>
+
+ #define SOKOL_IMPL
+-#include "sokol_time.h"
++#include "thirdparty/sokol_time.h"
+ #undef SOKOL_IMPL
+
+ #ifdef FEAT_PORTMIDI
+
