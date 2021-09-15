@@ -1,0 +1,102 @@
+From c4daf8224d80a216f65dfc5d35819d5739ee00f1 Mon Sep 17 00:00:00 2001
+From: izabera <izaberina@gmail.com>
+Date: Sat, 6 Aug 2016 08:11:19 +0200
+Subject: [PATCH] added qsort_r
+
+---
+ src/stdlib/qsort.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/src/stdlib/qsort.c b/src/stdlib/qsort.c
+index 434d935..064b9f5 100644
+--- a/src/stdlib/qsort.c
++++ b/src/stdlib/qsort.c
+@@ -28,7 +28,8 @@
+ #include "atomic.h"
+ #define ntz(x) a_ctz_l((x))
+ 
+-typedef int (*cmpfun)(const void *, const void *);
++typedef int (*cmpfun1)(const void *, const void *);
++typedef int (*cmpfun2)(const void *, const void *, void *);
+ 
+ static inline int pntz(size_t p[2]) {
+ 	int r = ntz(p[0] - 1);
+@@ -85,7 +86,12 @@ static inline void shr(size_t p[2], int n)
+ 	p[1] >>= n;
+ }
+ 
+-static void sift(unsigned char *head, size_t width, cmpfun cmp, int pshift, size_t lp[])
++#define compare(a,b) (cmp1 ? cmp1(a,b) : cmp2(a,b,arg))
++#define cmp cmp1, cmp2, arg
++
++static void sift(unsigned char *head, size_t width,
++    cmpfun1 cmp1, cmpfun2 cmp2, void *arg,
++    int pshift, size_t lp[])
+ {
+ 	unsigned char *rt, *lf;
+ 	unsigned char *ar[14 * sizeof(size_t) + 1];
+@@ -96,10 +102,10 @@ static void sift(unsigned char *head, size_t width, cmpfun cmp, int pshift, size
+ 		rt = head - width;
+ 		lf = head - width - lp[pshift - 2];
+ 
+-		if((*cmp)(ar[0], lf) >= 0 && (*cmp)(ar[0], rt) >= 0) {
++		if(compare(ar[0], lf) >= 0 && compare(ar[0], rt) >= 0) {
+ 			break;
+ 		}
+-		if((*cmp)(lf, rt) >= 0) {
++		if(compare(lf, rt) >= 0) {
+ 			ar[i++] = lf;
+ 			head = lf;
+ 			pshift -= 1;
+@@ -112,7 +118,9 @@ static void sift(unsigned char *head, size_t width, cmpfun cmp, int pshift, size
+ 	cycle(width, ar, i);
+ }
+ 
+-static void trinkle(unsigned char *head, size_t width, cmpfun cmp, size_t pp[2], int pshift, int trusty, size_t lp[])
++static void trinkle(unsigned char *head, size_t width,
++    cmpfun1 cmp1, cmpfun2 cmp2, void *arg,
++    size_t pp[2], int pshift, int trusty, size_t lp[])
+ {
+ 	unsigned char *stepson,
+ 	              *rt, *lf;
+@@ -127,13 +135,13 @@ static void trinkle(unsigned char *head, size_t width, cmpfun cmp, size_t pp[2],
+ 	ar[0] = head;
+ 	while(p[0] != 1 || p[1] != 0) {
+ 		stepson = head - lp[pshift];
+-		if((*cmp)(stepson, ar[0]) <= 0) {
++		if(compare(stepson, ar[0]) <= 0) {
+ 			break;
+ 		}
+ 		if(!trusty && pshift > 1) {
+ 			rt = head - width;
+ 			lf = head - width - lp[pshift - 2];
+-			if((*cmp)(rt, stepson) >= 0 || (*cmp)(lf, stepson) >= 0) {
++			if(compare(rt, stepson) >= 0 || compare(lf, stepson) >= 0) {
+ 				break;
+ 			}
+ 		}
+@@ -151,7 +159,8 @@ static void trinkle(unsigned char *head, size_t width, cmpfun cmp, size_t pp[2],
+ 	}
+ }
+ 
+-void qsort(void *base, size_t nel, size_t width, cmpfun cmp)
++static void actual_qsort(void *base, size_t nel, size_t width,
++    cmpfun1 cmp1, cmpfun2 cmp2, void *arg)
+ {
+ 	size_t lp[12*sizeof(size_t)];
+ 	size_t i, size = width * nel;
+@@ -213,3 +222,11 @@ void qsort(void *base, size_t nel, size_t width, cmpfun cmp)
+ 		head -= width;
+ 	}
+ }
++
++void qsort(void *base, size_t nel, size_t width, cmpfun1 cmp1) {
++  actual_qsort(base, nel, width, cmp1, NULL, NULL);
++}
++
++void qsort_r(void *base, size_t nel, size_t width, cmpfun2 cmp2, void *arg) {
++  actual_qsort(base, nel, width, NULL, cmp2, arg);
++}
+-- 
+2.9.2
+
