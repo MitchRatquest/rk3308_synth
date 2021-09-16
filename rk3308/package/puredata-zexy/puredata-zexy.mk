@@ -15,9 +15,9 @@ define PUREDATA_ZEXY_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) \
 		CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
 		PDINCLUDEDIR="$(STAGING_DIR)/usr/include/pd" \
-		PDDIR="$(STAGING_DIR)/usr/lib/pd" \
+		PDDIR="$(TARGET_DIR)/usr/lib/pd" \
 		PDLIBDIR="$(TARGET_DIR)/usr/local/lib/pd-externals" \
-		PDBINDIR="$(STAGING_DIR)/usr/lib/pd/bin" \
+		PDBINDIR="$(TARGET_DIR)/usr/lib/pd/bin" \
 		-C $(@D)
 endef
 
