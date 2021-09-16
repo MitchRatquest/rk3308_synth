@@ -1,3 +1,2 @@
-console=ttyS0,115200n8
-overlays=rk3308-console-on-uart0
+overlays=rk3308-uart0
 fdtfile=rockchip/rockpi-s-linux.dtb
