@@ -21,7 +21,7 @@
 #X floatatom 330 297 5 0 0 0 - - -;
 #X msg 410 274 \; pd dsp 0 \;;
 #X msg 410 322 \; pd dsp 1 \;;
-#X obj 64 191 mrpeach/udpsend~ 2 512;
+#X obj 64 191 mrpeach/udpsend~ 2 64;
 #X connect 1 0 18 0;
 #X connect 2 0 18 0;
 #X connect 3 0 6 0;
