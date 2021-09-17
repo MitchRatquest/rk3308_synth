@@ -25,6 +25,8 @@ define PUREDATA_IEMNET_INSTALL_TARGET_CMDS
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/iemnet/
 	find $(@D) -type f -name "*.pd_linux" -print | xargs -I{} $(INSTALL) -m 0755 \
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/iemnet/
+	find $(@D) -type f -name "*.so" -print | xargs -I{} $(INSTALL) -m 0755 \
+		{} $(TARGET_DIR)/usr/local/lib/pd-externals/iemnet/
 	#$(MAKE) install DESTDIR="$(TARGET_DIR)" -C $(@D)
 endef
 
