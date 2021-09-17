@@ -3,29 +3,34 @@
 ;
 #X msg 51 18 connect 192.168.0.104 9999;
 #X msg 90 42 disconnect;
-#X obj 257 129 adc~;
-#X obj 333 47 vsl 15 128 0.02 2 1 0 empty empty empty 0 -9 0 10 -262144
+#X obj 260 54 adc~;
+#X obj 397 68 vsl 15 128 0.02 2 1 0 empty empty empty 0 -9 0 10 -262144
 -1 -1 12700 1;
-#X obj 353 47 vsl 15 128 0.02 2 1 0 empty empty empty 0 -9 0 10 -262144
+#X obj 417 68 vsl 15 128 0.02 2 1 0 empty empty empty 0 -9 0 10 -262144
 -1 -1 12700 1;
 #X obj 257 153 *~;
 #X obj 282 171 *~;
 #X obj 58 285 osc~ 110;
 #X obj 58 322 dac~;
 #X obj 61 264 hsl 128 15 20 440 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 12700 1;
+-1 -1 0 1;
 #X msg 104 67 format float;
 #X msg 121 93 format 16bit;
 #X msg 132 126 format 8bit;
 #X obj 330 272 cpuload;
 #X floatatom 330 297 5 0 0 0 - - -;
-#X msg 410 274 \; pd dsp 0 \;;
+#X msg 431 267 \; pd dsp 0 \;;
 #X msg 410 322 \; pd dsp 1 \;;
-#X obj 64 191 mrpeach/udpsend~ 2 64;
+#X obj 64 191 mrpeach/udpsend~ 2 128;
+#X obj 310 123 hip~ 15;
+#X obj 255 98 hip~ 15;
+#X obj 399 15 loadbang;
+#X msg 399 40 2;
+#X obj 403 227 loadbang;
 #X connect 1 0 18 0;
 #X connect 2 0 18 0;
-#X connect 3 0 6 0;
-#X connect 3 1 7 0;
+#X connect 3 0 20 0;
+#X connect 3 1 19 0;
 #X connect 4 0 6 1;
 #X connect 5 0 7 1;
 #X connect 6 0 18 0;
@@ -38,3 +43,11 @@
 #X connect 13 0 18 0;
 #X connect 14 0 15 0;
 #X connect 18 0 0 0;
+#X connect 19 0 7 0;
+#X connect 20 0 6 0;
+#X connect 21 0 22 0;
+#X connect 21 0 1 0;
+#X connect 22 0 4 0;
+#X connect 22 0 5 0;
+#X connect 23 0 17 0;
+
