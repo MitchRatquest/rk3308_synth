@@ -1,0 +1,12 @@
+--- a/src/s_watchdog.c	2020-01-01 23:49:02.090948616 -0600
++++ b/src/s_watchdog.c	2020-01-01 23:49:17.355029042 -0600
+@@ -45,7 +45,7 @@
+             else continue;
+         }
+         happy = 0;
+-        kill(getppid(), SIGHUP);
++        //kill(getppid(), SIGHUP);
+         fprintf(stderr, "watchdog: signaling pd...\n");
+     }
+ }
+
