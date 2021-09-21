@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6ce80a6..e8b6b42 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 3.0.0)
+ 
+ project(Mi4Pd)
+-
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ if (NOT EXISTS ${CMAKE_BINARY_DIR}/CMakeCache.txt)
+     if (NOT CMAKE_BUILD_TYPE)

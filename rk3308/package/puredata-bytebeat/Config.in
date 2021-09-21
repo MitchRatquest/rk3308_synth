@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_BYTEBEAT
+	bool "puredata-bytebeat"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  Bytebeat for Pure Data
