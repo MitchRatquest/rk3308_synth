@@ -15,11 +15,11 @@ define PUREDATA_ZEXY_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) \
 		CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
 		PDINCLUDEDIR="$(STAGING_DIR)/usr/include/pd" \
-		PDDIR="$(TARGET_DIR)/usr/lib/pd" \
 		PDLIBDIR="$(TARGET_DIR)/usr/local/lib/pd-externals" \
 		PDBINDIR="$(TARGET_DIR)/usr/lib/pd/bin" \
 		-C $(@D)
 endef
+
 
 define PUREDATA_ZEXY_INSTALL_TARGET_CMDS
 # $(TARGET_MAKE_ENV) $(MAKE) DESTDIR="$(TARGET_DIR)" -C $(@D) install
