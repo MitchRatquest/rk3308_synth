@@ -4,7 +4,7 @@
    arch.c.flags =
  endif
  
-+arch.c.flags = -mcpu=cortex-a35
++arch.c.flags = -mtune=cortex-a35
  
  #=== flags and paths for Linux =================================================
  
