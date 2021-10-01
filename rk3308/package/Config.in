@@ -34,7 +34,6 @@ menu "Puredata externals"
 endmenu
 endif 
 
-source "$BR2_EXTERNAL_rk3308_PATH/package/tcc/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/python-pychord/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/python-osc/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/gtkiostream/Config.in"
