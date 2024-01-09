@@ -1,0 +1,13 @@
+--- arch/arm/mach-rockchip/resource_img.c	2024-01-09 00:01:05.980965779 -0600
++++ arch/arm/mach-rockchip/resource_img.c	2024-01-09 00:02:02.263748712 -0600
+@@ -113,8 +113,8 @@
+ 
+ 	ret = memcmp(RESOURCE_MAGIC, hdr->magic, RESOURCE_MAGIC_SIZE);
+ 	if (ret) {
+-		printf("bad resource image magic: %s\n",
+-		       hdr->magic ? hdr->magic : "none");
++		printf("bad resource image magic: \n");
++		       //hdr->magic ? hdr->magic : "none");
+ 		ret = -EINVAL;
+ 	}
+ 	debug("resource image header:\n");
