@@ -23,7 +23,7 @@ cp -a $SCRIPT_DIR/vars.txt $BINARIES_DIR/
 # copy overlays over
 linuxDir=`find $BASE_DIR/build -name 'vmlinux' -type f | xargs dirname`
 mkdir -p $BINARIES_DIR/rockchip/overlays
-cp -a ${linuxDir}/arch/arm64/boot/dts/rockchip/overlay/*.dtbo $BINARIES_DIR/rockchip/overlays
+#cp -a ${linuxDir}/arch/arm64/boot/dts/rockchip/overlay/*.dtbo $BINARIES_DIR/rockchip/overlays
 
 ubootName=`find $BASE_DIR/build -name 'uboot-[0-9]*' -type d`
 
