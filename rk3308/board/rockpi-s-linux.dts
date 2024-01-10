@@ -6,8 +6,10 @@
 /dts-v1/;
 
 #include <dt-bindings/input/input.h>
-/* #include "rk3308.dtsi" */
-#include "rk3308k.dtsi"
+#include "rk3308.dtsi" 
+/* #include "rk3308k.dtsi"  */
+
+
 
 / {
 	model = "Radxa ROCK Pi S";
@@ -148,7 +150,7 @@
 		uart_rts_gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_LOW>;
 		pinctrl-names = "default", "rts_gpio";
 		pinctrl-0 = <&uart4_rts>;
-		pinctrl-1 = <&uart4_rts_gpio>;
+		pinctrl-1 = <&uart4_rts_pin>;
 		BT,power_gpio    = <&gpio4 RK_PB3 GPIO_ACTIVE_HIGH>;
 		BT,wake_host_irq = <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;
 		status = "okay";
@@ -245,7 +247,8 @@
 
 &rng {
 	status = "okay";
-}
+};
+
 
 &io_domains {
 	status = "okay";
@@ -258,9 +261,10 @@
 	vccio5-supply = <&vcc_io>;
 };
 
+
 &i2s_8ch_2 {
 	status = "okay";
-	#sound-dai-cells = <0>;
+	/* sound-dai-cells = <0>; */
 };
 
 &pinctrl {
@@ -346,6 +350,17 @@
 	};
 };
 
+&uart0 {
+	status = "disabled";
+};
+
+&fiq_debugger {
+	status = "okay";
+	rockchip,serial-id = <0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_xfer>;
+};
+ 
 &uart4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4_xfer &uart4_cts>;
@@ -374,3 +389,4 @@
 		thermal-sensors = <&tsadc 0>;
 	};
 };
+
