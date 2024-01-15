@@ -1,0 +1,11 @@
+--- src/d_soundfile.h	2024-01-14 20:26:30.642953616 -0600
++++ src/d_soundfile.h	2024-01-14 20:26:42.926680029 -0600
+@@ -20,7 +20,7 @@
+ /* GLIBC large file support */
+ #ifdef _LARGEFILE64_SOURCE
+ #define lseek lseek64
+-#define off_t __off64_t
++#define off64_t __off64_t
+ #endif
+ 
+ /* MSVC doesn't define or uses different naming for these Posix types */

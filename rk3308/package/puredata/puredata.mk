@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PUREDATA_VERSION = 0.51-4
+PUREDATA_VERSION = 0.54-1
 PUREDATA_SITE = https://github.com/pure-data/pure-data.git
 PUREDATA_SITE_METHOD = git
 PUREDATA_INSTALL_STAGING = YES
