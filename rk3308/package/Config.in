@@ -28,12 +28,14 @@ menu "Puredata externals"
         source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-mediasettings/Config.in"
         source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-mmb/Config.in"
         source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-mrpeach/Config.in"
+        source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-py4pd/Config.in"
         source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-shadylib/Config.in"
         source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-xsample/Config.in"
         source "$BR2_EXTERNAL_rk3308_PATH/package/puredata-zexy/Config.in"
 endmenu
 endif 
-
+source "$BR2_EXTERNAL_rk3308_PATH/package/nodogsplash/Config.in"
+source "$BR2_EXTERNAL_rk3308_PATH/package/websocat/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/python-pychord/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/python-osc/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/gtkiostream/Config.in"
