@@ -8,3 +8,32 @@ config BR2_PACKAGE_PUREDATA
 	help
 	  Graphic realtime audio programming language
 
+	  https://github.com/pure-data/pure-data
+
+if BR2_PACKAGE_PUREDATA
+
+config BR2_PACKAGE_LIBPD
+	bool "libpd"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  Pure Data embeddable audio synthesis library
+
+config BR2_PACKAGE_LIBPD_UTILS
+	bool "libpd utils"
+	depends on BR2_PACKAGE_LIBPD
+	help
+	  Compile utilities into the libpd library
+
+config BR2_PACKAGE_LIBPD_INSTANCE
+	bool "libpd instance"
+	depends on BR2_PACKAGE_LIBPD
+	help
+	  Allow libpd multi-instance support
+
+config BR2_PACKAGE_LIBPD_EXTRA
+	bool "libpd extras"
+	depends on BR2_PACKAGE_LIBPD
+	help
+	  Compile extras~ into library 
+
+endif
