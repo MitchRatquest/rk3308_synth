@@ -1,0 +1,11 @@
+config BR2_PACKAGE_PUREDATA_PY4PD
+	bool "puredata py4pd"
+	depends on BR2_PACKAGE_PUREDATA
+	depends on BR2_PACKAGE_PYTHON3
+	depends on BR2_PACKAGE_PYTHON_NUMPY
+
+	help
+	  py4pd allows the use of Python as an object
+	  in PureData. 
+
+	  https://py4pd.readthedocs.io/en/stable/
