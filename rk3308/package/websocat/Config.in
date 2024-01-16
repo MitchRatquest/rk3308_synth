@@ -1,0 +1,9 @@
+config BR2_PACKAGE_WEBSOCAT
+	bool "websocat"
+	depends on BR2_PACKAGE_HOST_RUSTC_TARGET_ARCH_SUPPORTS
+	select BR2_PACKAGE_HOST_RUSTC
+	help
+	  Command-line client for WebSockets, like netcat (or curl)
+	  for ws:// with advanced socat-like functions
+
+	  https://github.com/vi/websocat
