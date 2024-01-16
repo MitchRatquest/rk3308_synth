@@ -1,0 +1,8 @@
+config BR2_PACKAGE_NODOGSPLASH
+	bool "nodogsplash"
+	select BR2_PACKAGE_LIBMICROHTTPD
+	
+	help
+	  Nodogsplash offers a simple way to provide
+	  restricted access to an Internet connection
+	  using a captive portal
