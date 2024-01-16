@@ -1,0 +1,9 @@
+config BR2_PACKAGE_WEBSOCKETD
+	bool "websocketd"
+	depends on BR2_PACKAGE_HOST_GO_TARGET_ARCH_SUPPORTS
+
+	help
+	  Turn any program that uses STDIN/STDOUT into a WebSocket server.
+	  Like inetd, but for WebSockets.
+
+	  http://websocketd.com/
