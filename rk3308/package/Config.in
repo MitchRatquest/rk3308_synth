@@ -36,6 +36,7 @@ endmenu
 endif 
 source "$BR2_EXTERNAL_rk3308_PATH/package/nodogsplash/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/websocat/Config.in"
+source "$BR2_EXTERNAL_rk3308_PATH/package/fzf/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/python-pychord/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/python-osc/Config.in"
 source "$BR2_EXTERNAL_rk3308_PATH/package/gtkiostream/Config.in"
