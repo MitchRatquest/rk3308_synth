@@ -1,5 +1,5 @@
---- kernel/time/tick-sched.c	2024-01-13 21:07:53.567590089 -0600
-+++ kernel/time/tick-sched.c	2024-01-13 21:08:23.650940184 -0600
+--- a/kernel/time/tick-sched.c	2024-01-13 21:07:53.567590089 -0600
++++ b/kernel/time/tick-sched.c	2024-01-13 21:08:23.650940184 -0600
 @@ -1050,7 +1050,7 @@
  		return false;
  
