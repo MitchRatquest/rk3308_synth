@@ -15,8 +15,8 @@ PUREDATA_PY4PD_DEPENDENCIES = puredata python3 python-numpy
 define PUREDATA_PY4PD_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) \
 		CC="$(TARGET_CC)" LD="$(TARGET_LD)" CXX="$(TARGET_CXX)" \
-		CPPFLAGS="$(TARGET_CPPFLAGS) PYTHON_INCLUDE=$(STAGING_DIR)/usr/include/python$(PYTHON3_VERSION_MAJOR)/ \
-		NUMPY_INCLUDE=$(STAGING_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR)/site-packages/numpy/core/include" \
+		CPPFLAGS="$(TARGET_CPPFLAGS)" PYTHON_INCLUDE=$(STAGING_DIR)/usr/include/python$(PYTHON3_VERSION_MAJOR)/ \
+		NUMPY_INCLUDE=$(STAGING_DIR)/usr/lib/python$(PYTHON3_VERSION_MAJOR)/site-packages/numpy/core/include \
 		PYTHON_VERSION=python$(PYTHON3_VERSION_MAJOR) \
 		PDINCLUDEDIR="$(STAGING_DIR)/usr/include/pd" \
 		PDDIR="$(STAGING_DIR)/usr/lib/pd" \
@@ -29,6 +29,8 @@ define PUREDATA_PY4PD_INSTALL_TARGET_CMDS
 	find $(@D) -type f -name "*.pd" -print | xargs -I{} $(INSTALL) -m 0755 \
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/py4pd/
 	find $(@D) -type f -name "*.pd_linux" -print | xargs -I{} $(INSTALL) -m 0755 \
+		{} $(TARGET_DIR)/usr/local/lib/pd-externals/py4pd/
+	find $(@D) -type f -name "*.py" -print | xargs -I{} $(INSTALL) -m 0755 \
 		{} $(TARGET_DIR)/usr/local/lib/pd-externals/py4pd/
 	#$(MAKE) install DESTDIR="$(TARGET_DIR)" -C $(@D)
 	#$(INSTALL) -d $(TARGET_DIR)/usr/local/lib/pd-externals/py4pd
