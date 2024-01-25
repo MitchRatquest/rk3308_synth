@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_COMPORT
+	bool "puredata-comport"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  accessing the serial port from within Pd
