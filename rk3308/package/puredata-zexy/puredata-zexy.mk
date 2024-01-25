@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PUREDATA_ZEXY_VERSION = 98d4a190cfb0d662255e7c493ffb9c500b8680b3
+PUREDATA_ZEXY_VERSION = v2.4.3 # 98d4a190cfb0d662255e7c493ffb9c500b8680b3
 PUREDATA_ZEXY_SITE = https://git.iem.at/pd/zexy.git
 PUREDATA_ZEXY_SITE_METHOD = git
 PUREDATA_ZEXY_INSTALL_STAGING = NO
