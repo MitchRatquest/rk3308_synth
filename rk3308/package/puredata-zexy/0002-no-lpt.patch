@@ -1,0 +1,11 @@
+--- a/Makefile	2024-01-25 00:15:56.608310052 -0600
++++ b/Makefile	2024-01-25 00:16:01.232213120 -0600
+@@ -8,7 +8,7 @@
+ 
+ make-lib-executable=yes
+ with-regex=yes
+-with-lpt=yes
++with-lpt=no
+ 
+ # input source file (class name == source file basename)
+ class.sources = \
