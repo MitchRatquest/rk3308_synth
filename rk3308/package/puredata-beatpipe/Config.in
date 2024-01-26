@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_BEATPIPE
+	bool "puredata-beatpipe"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  A realtime scheduler, event-delay, and quantizer object 
