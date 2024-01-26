@@ -1,0 +1,8 @@
+config BR2_PACKAGE_PUREDATA_AUTOMATONISM_RELOADED
+	bool "puredata-automatonism-reloaded"
+	depends on BR2_PACKAGE_PUREDATA
+	depends on BR2_PACKAGE_PUREDATA_IEMGUTS
+	help
+	  Automatonism fork with new features: midi learn,
+	  in-patch state saving, DAW integration
+
