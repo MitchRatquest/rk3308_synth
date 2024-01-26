@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_BASSEMU
+	bool "puredata-bassemu"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  an object that simulates a transistor-based electronic synthesizer
