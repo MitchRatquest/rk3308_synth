@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PUREDATA_ELSE_VERSION = f3012068a978f5a83237dfcf27e172f2d8b10176
+PUREDATA_ELSE_VERSION = c9491f3837a8f961364a905c2490bd13d3081f25
 PUREDATA_ELSE_SITE = https://github.com/porres/pd-else.git
 PUREDATA_ELSE_SITE_METHOD = git
 PUREDATA_ELSE_INSTALL_STAGING = YES
