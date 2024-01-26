@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_IEMGUTS
+	bool "puredata-guts"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  working the intestines of Pd
