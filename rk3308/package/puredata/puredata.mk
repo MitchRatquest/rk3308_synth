@@ -11,7 +11,7 @@ PUREDATA_INSTALL_STAGING = YES
 PUREDATA_INSTALL_TARGET = YES
 PUREDATA_AUTORECONF = YES 
 PUREDATA_CONF_OPTS += --disable-portaudio --no-recursion --disable-portmidi \
-	--with-external-extension=pd_linux --with-deken-cpu=arm64
+	--with-external-extension=pd_linux
 PUREDATA_DEPENDENCIES = alsa-utils tcl tk gettext
 
 ifeq ($(BR2_PACKAGE_JACK2), y)
@@ -20,9 +20,9 @@ else
 PUREDATA_CONF_OPTS += --disable-jack-framework
 endif
 
-#ifeq ($(BR2_PACKAGE_FFTW),y)
-#PUREDATA_CONF_OPTS += --enable-fftw
-#endif
+ifeq ($(BR2_PACKAGE_FFTW),y)
+PUREDATA_CONF_OPTS += --enable-fftw
+endif
 
 ifeq ($(BR2_PACKAGE_LIBPD),y)
 PUREDATA_CONF_OPTS += --enable-libpd
