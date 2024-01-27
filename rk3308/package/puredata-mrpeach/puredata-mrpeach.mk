@@ -12,15 +12,18 @@ PUREDATA_MRPEACH_INSTALL_TARGET = YES
 PUREDATA_MRPEACH_DEPENDENCIES = puredata
 
 define PUREDATA_MRPEACH_BUILD_CMDS
-	echo $(TARGET_MAKE_ENV)
+	$(TARGET_MAKE_ENV) $(MAKE) \
 	$(TARGET_MAKE_ENV) $(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) \
-		PD_PATH="$(STAGING_DIR)/usr/lib/pd" -C $(@D)
+		PD_INCLUDE="$(STAGING_DIR)/usr/include/pd" \
+		PD_PATH="$(STAGING_DIR)/usr/lib/pd" -C $(@D) all
 	$(TARGET_MAKE_ENV) $(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) \
 		PD_PATH="$(STAGING_DIR)/usr/lib/pd" \
 		PD_INCLUDE="$(STAGING_DIR)/usr/include/pd" -C $(@D)/net
 	$(TARGET_MAKE_ENV) $(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) \
+		PD_INCLUDE="$(STAGING_DIR)/usr/include/pd" \
 		PD_PATH="$(STAGING_DIR)/usr/lib/pd" -C $(@D)/cmos
 	$(TARGET_MAKE_ENV) $(MAKE) CC=$(TARGET_CC) LD=$(TARGET_LD) \
+		PD_INCLUDE="$(STAGING_DIR)/usr/include/pd" \
 		PD_PATH="$(STAGING_DIR)/usr/lib/pd" -C $(@D)/osc
 endef
 
