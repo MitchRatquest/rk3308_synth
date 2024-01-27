@@ -1,0 +1,11 @@
+--- a/thirdparty/sokol_time.h	2024-01-26 23:01:15.695608651 -0600
++++ b/thirdparty/sokol_time.h	2024-01-26 23:01:29.971301130 -0600
+@@ -80,7 +80,7 @@
+         distribution.
+ */
+ #include <stdint.h>
+-
++#include <time.h>
+ #ifndef SOKOL_API_DECL
+     #define SOKOL_API_DECL extern
+ #endif

@@ -1,0 +1,10 @@
+--- a/sysmisc.c	2024-01-26 23:00:43.996291232 -0600
++++ b/sysmisc.c	2024-01-26 23:00:49.596170711 -0600
+@@ -4,6 +4,7 @@
+ #include <ctype.h>
+ #include <errno.h>
+ #include <sys/stat.h>
++#include <stdio.h>
+ 
+ static char const *const xdg_config_home_env = "XDG_CONFIG_HOME";
+ static char const *const home_env = "HOME";

@@ -1,42 +1,26 @@
---- a/Makefile	2019-12-15 16:58:55.029896481 -0600
-+++ b/Makefile	2019-12-15 16:56:42.441253994 -0600
-@@ -1,13 +1,9 @@
--all: debug
+--- a/Makefile	2024-01-26 22:54:47.299936848 -0600
++++ b/Makefile	2024-01-26 22:55:18.295275071 -0600
+@@ -1,16 +1,8 @@
+-all: release
 +CC = gcc
-+CFLAGS = -std=c99 -pipe -O3
++CFLAGS = -std=c99 -pipe -O3 -D_FORTIFY_SOURCE=0 -U_FORTIFY_SOURCE -DNDEBUG -flto -s -I./thirdparty -finput-charset=UTF-8 -Wall -Wpedantic -Wextra -Wwrite-strings -Wconversion -Wshadow -Wstrict-prototypes -Werror=implicit-function-declaration -Werror=implicit-int -Werror=incompatible-pointer-types -Werror=int-conversion -no-pie -fno-pie  -D_XOPEN_SOURCE_EXTENDED=1 -isystem thirdparty -D_POSIX_C_SOURCE=200809L
 +LIBS = -lrt -lncurses -lmenu -lform
 +TARGET = orca
-+SRCS = gbuffer.c field.c mark.c bank.c sim.c osc_out.c term_util.c tui_main.c
-
++SRCS = gbuffer.c field.c vmio.c sim.c osc_out.c term_util.c sysmisc.c thirdparty/oso.c tui_main.c
+ 
 -.PHONY: debug
 -debug:
--	@./tool build debug orca
-+all:
-+	$(CC) $(CFLAGS) $(SRCS) $(LIBS) -o $(TARGET)
-
+-	@./tool build -d --portmidi orca
+-
 -.PHONY: release
 -release:
--	@./tool build release orca
+-	@./tool build --portmidi orca
+-	@echo "Executable program saved as: build/orca" >&2
+-	@echo "To run it, simply execute it:" >&2
+-	@echo "$$ build/orca" >&2
 -
 -.PHONY: clean
 -clean:
 -	@./tool clean
---- a/term_util.c	2019-12-15 17:02:04.869056696 -0600
-+++ b/term_util.c	2019-12-15 17:02:18.512574820 -0600
-@@ -1,3 +1,4 @@
-+#include <stddef.h>
- #include "term_util.h"
- #include <ctype.h>
- #include <form.h>
---- a/tui_main.c 2019-12-15 17:05:13.528049984 -0600
-+++ b/tui_main.c	2019-12-15 17:05:22.633786528 -0600
-@@ -10,7 +10,7 @@
- #include <locale.h>
-
- #define SOKOL_IMPL
--#include "sokol_time.h"
-+#include "thirdparty/sokol_time.h"
- #undef SOKOL_IMPL
-
- #ifdef FEAT_PORTMIDI
-
++all:
++	$(CC) $(CFLAGS) $(SRCS) $(LIBS) -o $(TARGET)
