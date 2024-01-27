@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PUREDATA_FFTEASE_VERSION = 552912e9c557dae7e2cec5f5d6c5bacbd6f6e075
+PUREDATA_FFTEASE_VERSION = 98e98199774c08d939d26380493d41c038490942
 PUREDATA_FFTEASE_SITE = https://github.com/ericlyon/pd-fftease.git
 PUREDATA_FFTEASE_SITE_METHOD = git
 PUREDATA_FFTEASE_INSTALL_STAGING = YES
@@ -12,7 +12,8 @@ PUREDATA_FFTEASE_INSTALL_TARGET = YES
 PUREDATA_FFTEASE_DEPENDENCIES = puredata
 
 define PUREDATA_FFTEASE_BUILD_CMDS
-	$(MAKE) CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
+	$(TARGET_MAKE_ENV) $(MAKE) \
+		CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
 		PDINCLUDEDIR="$(STAGING_DIR)/usr/include/pd" \
 		PDDIR="$(STAGING_DIR)/usr/lib/pd" \
 		PDLIBDIR="" \
