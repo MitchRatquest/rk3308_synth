@@ -1,0 +1,27 @@
+--- a/Makefile	2024-01-27 00:17:39.030323168 -0600
++++ b/Makefile	2024-01-27 00:21:23.833239199 -0600
+@@ -57,11 +57,11 @@
+ 
+ ALL_CFLAGS += -DPD -DVERSION='"$(LIBRARY_VERSION)"'
+ 
+-PD_INCLUDE = $(PD_PATH)/include/pd
++PD_INCLUDE := $(PD_PATH)/include/pd
+ # where to install the library, overridden below depending on platform
+-prefix = /usr/local
+-libdir = $(prefix)/lib
+-pkglibdir = $(libdir)/pd-externals
++prefix := /usr/local
++libdir := $(prefix)/lib
++pkglibdir := $(libdir)/pd-externals
+ objectsdir = $(pkglibdir)
+ 
+ INSTALL = install
+@@ -154,7 +154,7 @@
+   EXTENSION = pd_linux
+   SHARED_EXTENSION = so
+   OS = linux
+-  PD_PATH = /usr
++  PD_PATH := /usr
+   OPT_CFLAGS = -O6 -funroll-loops -fomit-frame-pointer
+   ALL_CFLAGS += -fPIC
+   ALL_LDFLAGS += -rdynamic -shared -fPIC

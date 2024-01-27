@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_CXC
+	bool "puredata-cxc"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  Library for working with patterns and numbers
