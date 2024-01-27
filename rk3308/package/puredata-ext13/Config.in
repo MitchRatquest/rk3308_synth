@@ -1,0 +1,5 @@
+config BR2_PACKAGE_PUREDATA_EXT13
+	bool "puredata-ext13"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  ext13 is a collection of various externals for Pd
