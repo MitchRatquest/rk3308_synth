@@ -16,7 +16,7 @@ define PUREDATA_FFTEASE_BUILD_CMDS
 		CC="$(TARGET_CC)" LD="$(TARGET_LD)" \
 		PDINCLUDEDIR="$(STAGING_DIR)/usr/include/pd" \
 		PDDIR="$(STAGING_DIR)/usr/lib/pd" \
-		PDLIBDIR="" \
+		PDLIBDIR="$(TARGET_DIR)/usr/local/lib/pd-externals" \
 		PDBINDIR="$(STAGING_DIR)/usr/lib/pd/bin" \
 		-C $(@D)
 endef
