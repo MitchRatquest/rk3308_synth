@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PUREDATA_CREB
+	bool "puredata-creb"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  Tom Schouten's abstractions & externals 
+	  library for Pure Data
