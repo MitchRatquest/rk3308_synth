@@ -14,7 +14,6 @@ PUREDATA_CXC_DEPENDENCIES = puredata
 define PUREDATA_CXC_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) \
 		CC=$(TARGET_CC) LD=$(TARGET_LD) \
-		CXX="$(TARGET_CXX)" CPPFLAGS="$(TARGET_CPPFLAGS)" \
 		PD_INCLUDE="$(STAGING_DIR)/include/pd" \
 		PDDIR="$(STAGING_DIR)/usr/lib/pd" \
 		PDLIBDIR="$(TARGET_DIR)/usr/local/lib/pd-externals" \
