@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PUREDATA_CHAOS
+	bool "puredata-chaos"
+	depends on BR2_PACKAGE_PUREDATA
+	help
+	  set of objects for PD which calculate
+	  various "Chaotic Attractors"
