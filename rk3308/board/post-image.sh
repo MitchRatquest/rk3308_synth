@@ -25,7 +25,7 @@ linuxDir=`find $BASE_DIR/build -name 'vmlinux' -type f | xargs dirname`
 mkdir -p $BINARIES_DIR/rockchip/overlays
 #cp -a ${linuxDir}/arch/arm64/boot/dts/rockchip/overlay/*.dtbo $BINARIES_DIR/rockchip/overlays
 
-ubootName=`find $BASE_DIR/build -name 'uboot-[0-9]*' -type d`
+ubootName=`find $BASE_DIR/build -name 'uboot-[0-9]*' -type d | head -n1`
 
 # uboot creation
 $RKTOOLS/loaderimage --pack --uboot $ubootName/u-boot-dtb.bin $BINARIES_DIR/uboot.img 0x600000 --size 1024 1
@@ -52,7 +52,9 @@ $RKBIN/tools/trust_merger --size 1024 1 ${ubootName}/trust.ini
 
 # first stage boot loader creation
 $ubootName/tools/mkimage -n rk3308 -T rksd -d $SCRIPT_DIR/rk3308_ddr_589MHz_uart0_m0_v1.26.bin $BINARIES_DIR/idbloader.img
+#$ubootName/tools/mkimage -n rk3308 -T rksd -d $SCRIPT_DIR/rk3308_ddr_589MHz_uart4_m0_v2.10.bin  $BINARIES_DIR/idbloader.img
 cat $SCRIPT_DIR/rk3308_miniloader_emmc_port_support_sd_20190717.bin >> $BINARIES_DIR/idbloader.img
+#cat $SCRIPT_DIR/rk3308_miniloader_v1.43.bin >> $BINARIES_DIR/idbloader.img
 
 # Generate the uboot script
 $ubootName/tools/mkimage -C none -A arm -T script -d $SCRIPT_DIR/boot.cmd $BINARIES_DIR/boot.scr
