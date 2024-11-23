@@ -3,7 +3,8 @@ setenv load_addr "0x9000000"
 load mmc ${devnum} ${load_addr} vars.txt
 env import -t ${load_addr} ${filesize}
 
-setenv bootargs "root=/dev/mmcblk1p2 earlyprintk console=ttyS0,115200 rw rootwait"
+# lpj == loops per jiffy, it prints it out every boot
+setenv bootargs "root=/dev/mmcblk1p2 earlyprintk console=ttyS0,1500000 rw rootwait lpj=24000"
 fatload mmc ${devnum}:${distro_bootpart} ${fdt_addr_r} ${fdtfile}
 fatload mmc ${devnum}:${distro_bootpart} ${kernel_addr_r} Image
 
