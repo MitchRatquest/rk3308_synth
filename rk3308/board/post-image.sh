@@ -21,17 +21,19 @@ SCRIPT_DIR="$(dirname $0)"
 cp -a $SCRIPT_DIR/vars.txt $BINARIES_DIR/
 
 # copy overlays over
-linuxDir=`find $BASE_DIR/build -name 'vmlinux' -type f | xargs dirname`
+# THIS IS CRAZY
+linuxDir=`find $BASE_DIR/build -maxdepth 2 -name 'vmlinux' -type f | xargs dirname`
+#linuxDir=`find $BASE_DIR/build -name 'vmlinux' -type f | xargs dirname` # TAKES WAY TOO LONG????
 mkdir -p $BINARIES_DIR/rockchip/overlays
 #cp -a ${linuxDir}/arch/arm64/boot/dts/rockchip/overlay/*.dtbo $BINARIES_DIR/rockchip/overlays
 
-ubootName=`find $BASE_DIR/build -name 'uboot-[0-9]*' -type d | head -n1`
-
+#ubootName=`find $BASE_DIR/build -name 'uboot-[0-9]*' -type d | head -n1`
+ubootName=`find $BASE_DIR/build  -maxdepth 1 -name 'uboot-[0-9]*'  -type d   -printf "%T@ %Tc %p\n"  | sort -nr | awk '{print $NF}' | head -n1` # FASTER!
 # uboot creation
 $RKTOOLS/loaderimage --pack --uboot $ubootName/u-boot-dtb.bin $BINARIES_DIR/uboot.img 0x600000 --size 1024 1
 
 # trust img creation
-cat >$ubootName/trust.ini <<EOF
+cat > "$ubootName"/trust.ini <<EOF
 [VERSION]
 MAJOR=1
 MINOR=0
@@ -39,7 +41,7 @@ MINOR=0
 SEC=0
 [BL31_OPTION]
 SEC=1
-PATH=$SCRIPT_DIR/rk3308_bl31_v2.10.elf
+PATH=$SCRIPT_DIR/rk3308_bl31_v2.26.elf
 ADDR=0x00010000
 [BL32_OPTION]
 SEC=0
@@ -52,8 +54,8 @@ $RKBIN/tools/trust_merger --size 1024 1 ${ubootName}/trust.ini
 
 # first stage boot loader creation
 $ubootName/tools/mkimage -n rk3308 -T rksd -d $SCRIPT_DIR/rk3308_ddr_589MHz_uart0_m0_v1.26.bin $BINARIES_DIR/idbloader.img
-#$ubootName/tools/mkimage -n rk3308 -T rksd -d $SCRIPT_DIR/rk3308_ddr_589MHz_uart4_m0_v2.10.bin  $BINARIES_DIR/idbloader.img
-cat $SCRIPT_DIR/rk3308_miniloader_emmc_port_support_sd_20190717.bin >> $BINARIES_DIR/idbloader.img
+#$ubootName/tools/mkimage -n rk3308 -T rksd -d $SCRIPT_DIR/rk3308_ddr_589MHz_uart0_m0_dec3_v2.10.bin  $BINARIES_DIR/idbloader.img
+cat $SCRIPT_DIR/rk3308_miniloader_v1.43.bin >> $BINARIES_DIR/idbloader.img
 #cat $SCRIPT_DIR/rk3308_miniloader_v1.43.bin >> $BINARIES_DIR/idbloader.img
 
 # Generate the uboot script
@@ -62,6 +64,7 @@ $ubootName/tools/mkimage -C none -A arm -T script -d $SCRIPT_DIR/boot.cmd $BINAR
 # Put the device trees into the correct location
 mkdir -p $BINARIES_DIR/rockchip; cp -a $BINARIES_DIR/*.dtb $BINARIES_DIR/rockchip
 $BASE_DIR/buildroot/support/scripts/genimage.sh -c $SCRIPT_DIR/genimage.cfg
+mkdir -p $BINARIES_DIR/extlinux; cp $SCRIPT_DIR/extlinux.conf $BINARIES_DIR/extlinux;
 
 echo
 echo
