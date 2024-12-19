@@ -4,7 +4,9 @@ load mmc ${devnum} ${load_addr} vars.txt
 env import -t ${load_addr} ${filesize}
 
 # lpj == loops per jiffy, it prints it out every boot
-setenv bootargs "root=/dev/mmcblk1p2 earlyprintk console=ttyS0,1500000 rw rootwait lpj=24000"
+# coherent_pool=2M irqchip.gicv3_pseudo_nmi=0 from debian 6.1.68-1-stable
+# Debian uses extlinux
+setenv bootargs "root=/dev/mmcblk1p2 earlyprintk console=ttyS0,1500000 rw rootwait lpj=24000 coherent_pool=2M irqchip.gicv3_pseudo_nmi=0"
 fatload mmc ${devnum}:${distro_bootpart} ${fdt_addr_r} ${fdtfile}
 fatload mmc ${devnum}:${distro_bootpart} ${kernel_addr_r} Image
 
