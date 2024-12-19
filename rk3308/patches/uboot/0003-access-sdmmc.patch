@@ -1,0 +1,24 @@
+--- a/arch/arm/dts/rk3308-rock-s0-u-boot.dtsi	2024-12-06 00:16:30.096882493 -0600
++++ b/arch/arm/dts/rk3308-rock-s0-u-boot.dtsi	2024-12-06 00:16:57.248319126 -0600
+@@ -7,6 +7,21 @@
+ 	bootph-some-ram;
+ };
+ 
++&pcfg_pull_down {
++	bootph-pre-ram;
++	bootph-some-ram;
++};
++
++&sdmmc {
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_det &sdmmc_pwren &sdmmc_bus4>;
++};
++
++&sdmmc_pwren {
++	bootph-pre-ram;
++	bootph-some-ram;
++	rockchip,pins = <4 RK_PD6 0 &pcfg_pull_down>;
++};
++
+ &uart0 {
+ 	bootph-all;
+ 	clock-frequency = <24000000>;
