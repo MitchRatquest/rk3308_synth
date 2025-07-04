@@ -1,0 +1,9 @@
+.br2-external*
+.config
+build/
+download/
+host/
+images/
+staging
+target/
+Makefile
