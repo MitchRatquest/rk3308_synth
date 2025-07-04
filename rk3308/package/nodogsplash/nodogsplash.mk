@@ -17,6 +17,7 @@ endef
 define NODOGSPLASH_INSTALL_TARGET_CMDS
     $(INSTALL) -D -m 0755 $(@D)/nodogsplash $(TARGET_DIR)/usr/bin
     $(INSTALL) -D -m 0755 $(@D)/ndsctl $(TARGET_DIR)/usr/bin
+    $(INSTALL) -d $(TARGET_DIR)/etc/nodogsplash
     $(INSTALL) -D -m 0755 $(@D)/resources/nodogsplash.conf $(TARGET_DIR)/etc/nodogsplash/
     #$(INSTALL) -D -m 0644 $(@D)/examples/*.nodogsplash $(TARGET_DIR)/usr/share/nodogsplash/
 endef
