@@ -3,7 +3,7 @@
 # fzf
 #
 ################################################################################
-FZF_VERSION = v0.56.3
+FZF_VERSION = v0.63.0
 FZF_SITE = $(call github,junegunn,fzf,$(FZF_VERSION))
 
 $(eval $(golang-package))
