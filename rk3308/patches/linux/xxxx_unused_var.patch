@@ -1,0 +1,11 @@
+--- drivers/phy/rockchip/phy-rockchip-inno-usb2.c	2025-07-04 16:06:02.487437011 -0500
++++ drivers/phy/rockchip/phy-rockchip-inno-usb2.c	2025-07-04 16:06:09.435427723 -0500
+@@ -1243,7 +1243,7 @@
+ 					  struct rockchip_usb2phy_port *rport,
+ 					  struct device_node *child_np)
+ {
+-	int ret, id;
++	int ret;
+ 
+ 	rport->port_id = USB2PHY_PORT_OTG;
+ 	rport->port_cfg = &rphy->phy_cfg->port_cfgs[USB2PHY_PORT_OTG];
