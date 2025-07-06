@@ -1,6 +1,8 @@
-date --set="Fri Sept 10 2021 23:39:44 CST"
+date --set="Sat Jul 20 09:49:19 PM CST 2025"
 export FZF_DEFAULT_COMMAND="ls"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"
+
+echo none > /sys/class/leds/green:heartbeat/trigger
 
 ColoredPrint() {
     case "$1" in
@@ -69,6 +71,37 @@ fd() { #find directory
 }
 
 vf() {  vim "$(ff "$@" | fzf)"; }
+cf() { cat "$(ff "$@" | fzf)"; }
+
+wifi() {
+  modprobe brcmfmac_bca # the one that works well enough
+  gpioset gpiochip0 5=0 # external antenna GPIO
+  wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+  udhcpc -i wlan0
+  #wget --no-check-certificate https://link.testfile.org/500MB
+}
+
+hotspot() {
+  modprobe brcmfmac_bca # the one that works well enough
+  gpioset gpiochip0 5=0 # external antenna GPIO
+  gun wpa_supplicant
+  gun udhcpc
+  rm -rf /run/wpa_supplicant
+cat > /etc/hostapd.conf << EOF
+interface=wlan0
+channel=6
+ieee80211n=1
+hw_mode=g
+ssid2=f09f939a204c6974746c652046726565204c69627261727920f09f939a
+EOF
+  hostapd /etc/hostapd.conf &
+  ip link set wlan0 up
+  ifconfig wlan0 192.168.100.1
+  /etc/init.d/S80dnsmasq restart
+}
+
+
+
 
 function gf() {
   local thisfile=( $(grep -irHn "$@" * | fzf | awk -F':' '{print $1, "+"$2  }' ) )
@@ -119,3 +152,12 @@ gun() {
     kill -9 "$p"
   done
 }
+
+wherethefuck () 
+{ 
+    local previous_dir=$(pwd);
+    cd /;
+    find . \( -path './sys' -o -path './proc' -o -path './dev' \) -prune -o -type f -iname "*${1}*" -print 2> /dev/null;
+    cd "$previous_dir"
+}
+
