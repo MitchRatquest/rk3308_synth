@@ -1,0 +1,4 @@
+config BR2_PACKAGE_MUSTACHE
+	bool "mustache"
+	help
+	  Mustache text templates for modern C++

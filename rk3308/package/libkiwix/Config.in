@@ -1,0 +1,11 @@
+config BR2_PACKAGE_LIBKIWIX
+	bool "libkiwix"
+        select BR2_PACKAGE_LIBZIM
+	select BR2_PACKAGE_ICU
+	select BR2_PACKAGE_ZLIB
+	select BR2_PACKAGE_LIBCURL
+	select BR2_PACKAGE_PUGIXML
+	select BR2_PACKAGE_MICROHTTPD
+	select BR2_PACKAGE_MUSTACHE
+	help
+	  Common code base for all Kiwix ports
