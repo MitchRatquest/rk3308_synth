@@ -1,0 +1,11 @@
+--- ./src/server/kiwix-serve.cpp.orig	2025-07-06 14:45:20.952845336 -0500
++++ ./src/server/kiwix-serve.cpp	2025-07-06 14:45:41.496811417 -0500
+@@ -413,7 +413,7 @@
+     exit(1);
+   }
+ 
+-  std::string url = "http://" + server.getAddress() + ":" + std::to_string(server.getPort()) + normalizeRootUrl(rootLocation);
++  std::string url = "http://" + server.getAddress().addr + ":" + std::to_string(server.getPort()) + normalizeRootUrl(rootLocation);
+   std::cout << "The Kiwix server is running and can be accessed in the local network at: "
+             << url << std::endl;
+ 

@@ -1,0 +1,9 @@
+config BR2_PACKAGE_KIWIX_TOOLS
+	bool "kiwix-tools"
+        select BR2_PACKAGE_LIBZIM
+	select BR2_PACKAGE_LIBKIWIX
+	help
+	  The Kiwix tools is a collection of 
+	  Kiwix related command line tools
+
+	  https://github.com/kiwix/kiwix-tools
