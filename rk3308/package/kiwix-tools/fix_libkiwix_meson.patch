@@ -1,5 +1,5 @@
---- meson.build	2025-07-06 14:50:51.688289774 -0500
-+++ meson.build	2025-07-06 14:51:05.512266170 -0500
+--- a/meson.build	2025-07-06 14:50:51.688289774 -0500
++++ b/meson.build	2025-07-06 14:51:05.512266170 -0500
 @@ -18,8 +18,8 @@
  thread_dep = dependency('threads')
  libzim_dep = dependency('libzim', version:'>=9.0.0', static:static_linkage)
