@@ -1,0 +1,6 @@
+config BR2_PACKAGE_POCKETPY
+	bool "pocketpy"
+	help
+	  Portable Python 3.x Interpreter in Modern C
+	  for Game Scripting
+
