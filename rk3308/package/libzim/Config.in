@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBZIM
+	bool "libzim"
+        select BR2_PACKAGE_LZMA
+	select BR2_PACKAGE_ICU
+	select BR2_PACKAGE_ZSTD
+	select BR2_PACKAGE_XAPIAN
+	help
+	  Reference implementation of the ZIM spec
