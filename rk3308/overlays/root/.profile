@@ -1,6 +1,10 @@
-date --set="Sat Jul 20 09:49:19 PM CST 2025"
+date --set="Sun Jul  6 01:07:31 AM CDT 2025"
 export FZF_DEFAULT_COMMAND="ls"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"
+export TERM=xterm-256color
+mount -t debugfs none /sys/kernel/debug
+resize
+
 
 echo none > /sys/class/leds/green:heartbeat/trigger
 
@@ -100,6 +104,12 @@ EOF
   /etc/init.d/S80dnsmasq restart
 }
 
+zram_swap() {
+  # Create 256MB of zram, 4 threads, zstd compression
+  zramctl /dev/zram0 -s 256M -t 4 -a zstd
+  mkswap  /dev/zram0
+  swapon /dev/zram0
+}
 
 
 
@@ -160,4 +170,48 @@ wherethefuck ()
     find . \( -path './sys' -o -path './proc' -o -path './dev' \) -prune -o -type f -iname "*${1}*" -print 2> /dev/null;
     cd "$previous_dir"
 }
+
+freboot() {
+    echo 1 > /proc/sys/kernel/sysrq
+    echo s > /proc/sysrq-trigger
+    echo b > /proc/sysrq-trigger
+}
+
+dts_to_dtb() {
+        local INPUT="$1"
+        INPUT="${INPUT%%.*}"
+        dtc -O dtb -o "$INPUT".dtb "$INPUT".dts
+}
+
+dtb_to_dts() {
+        local INPUT="$1"
+        INPUT="${INPUT%%.*}"
+        dtc -O dts -o "$INPUT".dts "$INPUT".dtb
+}
+
+function dtsconvert() {
+  local input_file="$@"
+  local extension="${input_file##*.}"
+  local file_name="${input_file%.*}"
+  if [[ "$extension" == "dtb" ]]; then
+    output_extension="dts"
+    dtc -I dtb -O dts -f "$input_file" -o "$file_name.$output_extension"
+  elif [[ "$extension" == "dts" ]]; then
+    output_extension="dtb"
+    dtc -I dts -O dtb -f "$input_file" -o "$file_name.$output_extension"
+  else
+    echo "I only take dts or dtb files"
+  fi
+}
+
+list_tcp_connections() {  lsof -i tcp; }
+list_tcp_ports() { lsof -iTCP -sTCP:LISTEN -P -n ; }
+
+strace_open_files() {
+  strace -o /tmp/strace.log -f -t -e  trace=file "$@"
+  echo "Log output for strace in /tmp/strace.log"
+}
+
+# https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem#menuconfig
+run_idle_cpu_only() { ionice -c 3 chrt --idle 0 nice -n19 "$@"; }
 
