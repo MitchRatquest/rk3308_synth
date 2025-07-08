@@ -1,0 +1,6 @@
+config BR2_PACKAGE_PYTHON_PEEWEE
+	bool "python-peewee"
+	depends on BR2_PACKAGE_PYTHON || BR2_PACKAGE_PYTHON3
+	help
+	  A small, expressive orm
+	  supports postgresql, mysql, sqlite and cockroachdb
