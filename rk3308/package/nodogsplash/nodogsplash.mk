@@ -19,6 +19,11 @@ define NODOGSPLASH_INSTALL_TARGET_CMDS
     $(INSTALL) -D -m 0755 $(@D)/ndsctl $(TARGET_DIR)/usr/bin
     $(INSTALL) -d $(TARGET_DIR)/etc/nodogsplash
     $(INSTALL) -D -m 0755 $(@D)/resources/nodogsplash.conf $(TARGET_DIR)/etc/nodogsplash/
+    $(INSTALL) -d $(TARGET_DIR)/etc/nodogsplash/htdocs
+    $(INSTALL) -D -m 0644 $(@D)/resources/splash.html $(TARGET_DIR)/etc/nodogsplash/htdocs/
+    $(INSTALL) -D -m 0644 $(@D)/resources/splash.css $(TARGET_DIR)/etc/nodogsplash/htdocs/
+    $(INSTALL) -D -m 0644 $(@D)/resources/splash.jpg $(TARGET_DIR)/etc/nodogsplash/htdocs/
+    $(INSTALL) -D -m 0644 $(@D)/resources/status.jpg $(TARGET_DIR)/etc/nodogsplash/htdocs/
     #$(INSTALL) -D -m 0644 $(@D)/examples/*.nodogsplash $(TARGET_DIR)/usr/share/nodogsplash/
 endef
 
