@@ -2,11 +2,12 @@ date --set="Sun Jul  6 01:07:31 AM CDT 2025"
 export FZF_DEFAULT_COMMAND="ls"
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse"
 export TERM=xterm-256color
-mount -t debugfs none /sys/kernel/debug
+mount -t debugfs none /sys/kernel/debug 2>&1
 resize
 
 
 echo none > /sys/class/leds/green:heartbeat/trigger
+alias wget="wget --no-check-certificate"
 
 ColoredPrint() {
     case "$1" in
